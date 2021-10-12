@@ -1,0 +1,271 @@
+﻿@model Studentscreeningsystem.ViewsModel.alldegreeGraduateVM
+@{
+    ViewBag.Title = "RaportsGraduate";
+}
+
+<style>
+    .c4 {
+        grid-template-columns: repeat(4,1fr);
+    }
+</style>
+<script>
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () { $(this).remove(); });
+    }, 4000
+    );</script>
+<div class="panel-heading">كشف درجات الخريج : @Html.DisplayFor(model => model.Firstname)  @Html.DisplayFor(model => model.Lastname) </div>
+@if (TempData["updateDegreeSuccess"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["updateDegreeSuccess"]
+
+        </div>
+    </div>
+}
+
+
+<div class="panel panel-default" style="border: 1px solid #00a159;     padding: 20px 30px; ">
+    <div class="panel-body" style="font-family: Cairo;">
+        <div class="form-group row">
+
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-info">رقم الهوية:</span>
+
+                    </div>
+                    <div class="col-md-6">
+                        @Model.IdentityGraduate
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-info">الرقم العسكري:</span>
+
+                    </div>
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.NumGraduate)
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-info">اسم الخريج:</span>
+
+                    </div>
+                    <div class="col-md-6">
+                        @Model.Firstname  @Model.Lastname
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<br />
+@*/*************المتطلبات الأكاديمية***********/*@
+@if (@Model.degreeMatrial.Count > 0)
+{
+    <fieldset class="col-md-12">
+        <legend>المتطلبات الأكاديمية</legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="Grid c4">
+                        <span><strong>اسم المادة</strong></span>
+                        <span><strong>النسبة</strong></span>
+
+                        <span><strong>اسم المادة</strong></span>
+                        <span><strong>النسبة</strong></span>
+
+
+
+                        @foreach (var item in Model.degreeMatrial)
+                        {
+
+                            <span>@item.NameRequirement</span>
+                            <span>@item.percentage</span>
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+@*/*************المتطلبات البدنية***********/*@
+@if (Model.degreeFitness.Count > 0)
+{
+    <fieldset class="col-md-12">
+        <legend>المتطلبات البدنية</legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="Grid c4">
+                        <span><strong>#</strong></span>
+                        <span><strong>النسبة</strong></span>
+
+                        <span><strong>#</strong></span>
+                        <span><strong>النسبة</strong></span>
+
+
+                        @foreach (var item in Model.degreeFitness)
+                        {
+
+                            <span>@item.NameRequirement</span>
+                            <span>@item.percentage</span>
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+@*/*************الطول/ الوزن***********/*@
+<fieldset class="col-md-12">
+    <legend>الطول/ الوزن</legend>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-md-2">الطول</dt>
+                        <dd class="col-md-5">@Model.lenght</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-md-2">الوزن</dt>
+                        <dd class="col-md-5">@Model.weight</dd>
+                    </dl>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</fieldset>
+<br />
+@*النسبة الأجمالية لإختبار قياس عسكري*@
+@if (Model.degreeMesure.Count > 0)
+{
+    <fieldset class="col-md-12">
+        <legend>
+            النسبة الأجمالية لإختبار قياس عسكري
+        </legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="Grid c4">
+                        <span><strong>اسم المادة</strong></span>
+                        <span><strong>النسبة</strong></span>
+
+                        <span><strong>اسم المادة</strong></span>
+                        <span><strong>النسبة</strong></span>
+
+
+
+                        @foreach (var item in Model.degreeMesure)
+                        {
+
+                            <span>@item.NameRequirement</span>
+                            <span>@item.percentage</span>
+
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+}
+@*/*************متطلبات قيادية***********/*@
+
+@if (@Model.LeadershipVM.Count > 0)
+{
+    <fieldset class="col-md-12">
+        <legend>المتطلبات القيادية</legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+
+
+
+                    @foreach (var item in Model.LeadershipVM)
+                    {
+
+                        <div class="col-md-6 ">
+                            <dl class="row" style="margin-right: 0px;">
+                                <dt>@item.NameLeadership :</dt>
+                                <dd>
+                                    @if (item.IsChecked == true)
+                                    {
+                                        <span>نعم</span>
+                                    }
+                                    else
+                                    {
+                                        <span>لا</span>
+                                    }
+                                </dd>
+                            </dl>
+
+                        </div>
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+}<br />
+
+<fieldset class="col-md-12">
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-md-5">المعدل التراكمي</dt>
+                        <dd class="col-md-5">@Model.AverageGraduate</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<br />
+
+@Html.ActionLink("الرجوع إلى قائمة الخريجين", "ListGraduate", "Admin")

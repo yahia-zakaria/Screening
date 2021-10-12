@@ -1,0 +1,106 @@
+﻿ @model IEnumerable<Studentscreeningsystem.Models.PERMISSION>
+@{
+    ViewBag.Title = "إدارة الصلاحيات";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض الصلاحيات" })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='button']").button();
+    });
+</script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="panel-heading">إدارة الصلاحيات </div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            //    //Unbind the original image 'href' set by the controller...
+            $('.deletepermission').attr('href', 'javascript://');
+
+
+        });
+
+        function Edit(_id) {
+            var _parameters = { id: _id };
+            $('#exampleModal').modal('show')
+            $('#deletep').click(function() {
+
+                $.ajax({
+                    url: "/Admin/PermissionDelete/" + _id,
+                    type: "GET",
+                    data: _parameters,
+                    success: function(data, textStatus, jqXHR) {
+                        window.location.reload();
+                    }
+                });
+                $('#exampleModal').modal('hide')
+            });
+        }
+    </script>
+}
+<div class="modal fade pageModal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                هل أنت متأكد من حذف هذه الصلاحية؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn " data-dismiss="modal" style="margin-left: 6px;"> غلق</button>
+                <button type="button" class="btn " id="deletep">حذف </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        <button type="button" onclick="location.href = '@Url.Action("PermissionCreate", "Admin")'" class="btn "><i class="fa fa-plus "></i>إضافة صلاحية</button>
+    </div>
+    <div class="col-md-3 pull-left">
+        <button type="button" id="importPermissions2" name="importPermissions2" onclick="location.href = '@Url.Action("PermissionsImport", "Admin")'" class="btn pull-left"><i class="fa fa-cloud-upload "></i>إضافة جميع صلاحية</button>
+    </div>
+
+</div>
+<br/>
+
+<div class="row justify-content-md-center" id="tab">
+    <div class="col-md-9 ">
+        @(Html
+            .Grid(Model)
+            .Build(columns =>
+            {
+                //columns.Add(model => model.PermissionDescription).Titled("الصلاحية").Sortable(true).Filterable(true).SetWidth(670);
+                columns.Add(model => model.PermissionName).Titled("الصلاحية").Filterable(true);
+
+                //عمليات البرنامج
+                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "", "", new {}, new {@class = "faicone fa fa-trash-o deletepermission", onclick = "Edit('" + model.Permission_Id + "')"}));
+                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "PermissionEdit", "Admin", new {id = model.Permission_Id}, new {@class = "faicone fa fa-edit"}));
+                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "PermissionDetails", new {id = model.Permission_Id}, new {@class = "faicone fa fa-plus"}));
+            })
+            .Empty("لم يتم العثور على صلاحيات")
+            .Css("css-classes") // Overwrites all classes with the new ones
+            .AppendCss("table-hover")
+            .Pageable(pager =>
+            {
+                pager.PageSizes = new Dictionary<Int32, String> {{0, "الكل"}, {5, "5"}, {10, "10"}};
+                pager.ShowPageSizes = true;
+                pager.PagesToDisplay = 3;
+                pager.CurrentPage = 1;
+                pager.RowsPerPage = 5;
+            })
+            )
+    </div>
+</div>
+<br/>
+
+
+<br/>
+@Html.ActionLink("عرص قائمة المهام", "RoleIndex", "Admin")

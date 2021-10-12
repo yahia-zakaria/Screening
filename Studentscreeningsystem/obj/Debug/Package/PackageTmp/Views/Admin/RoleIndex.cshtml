@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.ROLE>
+@{
+    ViewBag.Title = "إدارة المهام";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض قائمة المهام" })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='button']").button();
+    });
+</script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="panel-heading">إدارة المهام </div>
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12 ">
+        @(Html
+                        .Grid(Model)
+                        .Build(columns =>
+                            {
+                                columns.Add(model => model.RoleName).Titled("المهمة").Filterable(true);
+                                columns.Add(model => model.RoleDescription).Titled("الوصف");
+                        //columns.Add(model => model.IsSysAdmin).Titled("مشرف").Sortable(true).SetWidth(150);
+                        columns.Add(model => model.IsSysAdmin).Titled("مشرف").RenderedAs(model => model.IsSysAdmin == true ? "نعم" : "لا");
+
+                        //عمليات البرنامج
+                        columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RoleDelete", "Admin", new { id = model.Role_Id }, new { @class = "faicone fa fa-trash-o deleteUser", title = "حذف مهمة " }));
+                                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RoleEdit", "Admin", new { id = model.Role_Id }, new { @class = "faicone fa fa-edit", title = "تعديل مهمة " }));
+                                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RoleDetails", new { id = model.Role_Id }, new { @class = "faicone fa fa-plus", title = "تفاصيل مهمة " }));
+                            })
+                            .Empty("لم يتم العثور على مهام")
+                                .Css("css-classes") // Overwrites all classes with the new ones
+                                .AppendCss("table-hover")
+                            .Pageable(pager =>
+                            {
+                                pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 5, "5" }, { 10, "10" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 5;
+                            })
+        )
+    </div>
+
+</div>
+
+
+<br />
+
+<div>
+    <button type="button" onclick="location.href='@Url.Action("RoleCreate", "Admin")'" class="btn "><i class="fa fa-plus "></i>إضافة مهمة</button>
+    <br />
+</div>
+
+
+<br />

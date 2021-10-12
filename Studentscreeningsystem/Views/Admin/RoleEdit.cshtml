@@ -1,0 +1,80 @@
+﻿@model Studentscreeningsystem.Models.ROLE
+@{
+    ViewBag.Title = "Edit " + Model.RoleDescription + " Role";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "تعديل مهمة " })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='submit']").button();
+        $(":input[type='button']").button();
+        
+    });
+</script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="panel-heading">تعديل مهمة  </div>
+<div class="panel">
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Role_Id)
+        <fieldset>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.RoleName, "المهمة", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.RoleName, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.RoleName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.RoleDescription, "الوصف", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.RoleDescription, new { @class = "singlelinetextinput form-control", style = "width:750px" })
+                            @Html.ValidationMessageFor(model => model.RoleDescription, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IsSysAdmin, "مشرف برنامج", htmlAttributes: new { @class = "control-label col-md-6 text-info" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.IsSysAdmin, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.IsSysAdmin, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <br />
+
+            <div class="row"><div class="col-md-11"><button type="submit" class="btn float-left "><i class="fa fa-save "></i>حفظ</button></div></div>
+        </fieldset>
+    }
+
+    <fieldset>
+        <legend>إضافة صلاحيات للمهمة</legend>
+        <div>
+            @Html.Partial("_AddPermission2PermissionsTable4Role", Model)
+        </div>
+        <div id="PermissionsTable">
+            @Html.Partial("_ListPermissions", Model)
+            <br />
+        </div>
+
+        <br />
+        <div>
+            @Html.ActionLink("الرجوع إلى قائمة الصلاحيات", "PermissionIndex", "Admin")
+        </div>
+    </fieldset>
+
+</div>
+<br />
+<div>
+    @Html.ActionLink("الرجوع إلى قائمة المهام", "RoleIndex", "Admin")
+</div>

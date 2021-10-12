@@ -1,0 +1,207 @@
+﻿@using System.Globalization;
+@model IEnumerable<Studentscreeningsystem.Models.GraduateWishes>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<link href="~/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+
+<style>
+    #bill {
+        display: none;
+    }
+
+
+
+    #sortable {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 95%;
+        margin-bottom: 46px;
+        margin-right: 29px;
+    }
+
+        #sortable li {
+            margin: 0 4px 5px 3px;
+            padding: 0.4em;
+            padding-right: 1.5em;
+            font-size: 1.4em;
+            height: 52px;
+        }
+
+    .cercle {
+        border-radius: 50%;
+        background-color: #00a159;
+        width: 34px;
+        display: inline-block
+    }
+</style>
+
+
+
+
+<div class="panel-heading">قائمة رغبات الخريج  </div>
+
+@if (TempData["DidGraduateWishes"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["DidGraduateWishes"] @Html.ActionLink("تعديل", "EditSortableWishes")
+    </div>
+}
+@if (TempData["successdidWishes"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["successdidWishes"]@Html.ActionLink("تعديل", "EditSortableWishes")
+    </div>
+}
+
+@if (TempData["DidWishes"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["DidWishes"]@Html.ActionLink("تعديل", "EditSortableWishes")
+    </div>
+}
+@if (Model.Count() != 0)
+{
+
+    foreach (var item in Model)
+    {
+        <ul id="sortable">
+
+            <li class="ui-state-default">
+
+                <div class="cercle text-center">
+                    @Html.DisplayFor(modelItem => item.Rank, new { @class = "center-block" })
+                </div>
+
+                @Html.DisplayFor(modelItem => item.Sector.NameSector)
+
+
+            </li>
+        </ul>
+
+
+    }
+    <div class="col-md-12">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button id="print" class="btn" onclick="printContent('bill')" ;> <i class="fa fa-print"> </i> طباعة التقرير </button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+
+    <div class="alert alert-danger" role="alert">
+        <p>الخريج لم يتم ادخال رغباته</p>
+
+        @if (ViewContext.Controller.HasPermissionUser("GraduateWishesVM-SortableWishes"))
+        {
+        @Html.ActionLink("إدخال الرغبات", "SortableWishes", "GraduateWishesVM")
+        }
+    </div>
+    <br />
+
+
+    if (ViewContext.Controller.HasPermissionUser("Admin-ListGraduate"))
+    {
+
+        @Html.ActionLink("قائمة الخريجين", "ListGraduate", "Admin")
+    }
+
+
+    <br/>
+
+}
+
+
+
+<div id="bill" style=" width:100%">
+
+
+    <div id="entete" style="display:inline-block; width:100%">
+        <div id="logo" style="display:inline-block; width:50%"><img src="~/Content/img/King Abdulaziz Military College.png" /></div>
+        <div id="title" style="display:inline-block; width:48%"> <h2> رغبات الخريج</h2></div>
+    </div>
+
+    @*معلومات الخريج*@
+    <div id="info">
+        <ul>
+            <li>
+                <div class="T">اسم الخريج:</div>
+
+                <div class="C"> @ViewBag.NameGraduate</div>
+            </li>
+            <li>
+                <div class="T">  الرقم العسكري :</div>
+                <div class="C"> @ViewBag.Passeword</div>
+            </li>
+            <li>
+                <div class="T"> رقم الهوية: </div>
+                <div class="C">
+                    @ViewBag.userName
+                </div>
+            </li>
+            <li>
+                <div class="T">
+                    التاريخ:
+                </div>
+                <div class="C">
+                    @DateTime.Now.ToString("dd MMM yyyy", new CultureInfo("ar")) هـ
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    @*معلومات الخريج*@
+
+    @*عملية ترتيب رغبات الخريج*@
+
+    <div id=" Wishes">
+
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li>
+
+                    @Html.DisplayFor(modelItem => item.Rank, new { @class = "center-block" }) :
+
+                    @Html.DisplayFor(modelItem => item.Sector.NameSector)
+
+
+                </li>
+            }
+        </ul>
+
+    </div>
+    @*عملية ترتيب رغبات الخريج*@
+
+    @*الإسم والتوقيع*@
+    <div id="singnature">
+        <p>الإسم و التوقيع</p>
+
+        <div id="Sig">
+
+        </div>
+    </div>
+
+</div>
+
+@*الإسم والتوقيع*@
+
+@*<button id="print" onclick="printContent('bill');">طباعة التقرير</button>*@
+
+
+<script>
+
+    function printContent(el) {
+        var restorepage = $('body').html();
+        var printcontent = $('#' + el).clone();
+        $('body').empty().html(printcontent);
+        window.print();
+        $('body').html(restorepage);
+    }
+</script>

@@ -1,0 +1,61 @@
+﻿@model Studentscreeningsystem.Models.USER
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض تفاصيل المستخدمين" })
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>*@
+<script src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='button']").button();
+        $(":input[type='submit']").button();
+    });
+
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () { $(this).remove(); });
+    }, 4000
+    );
+</script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+
+<div class="panel-heading">تفاصيل المستخدم</div>
+@if (TempData["Successupdate"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["Successupdate"]
+
+        </div>
+    </div>
+}
+@using (Html.BeginForm("UserDetails", "Admin", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @Html.Partial("_userDetails", Model)
+        <br />
+
+        <div class="row"><div class="col-md-11"><button type="button" onclick="location.href='@Url.Action("UserEdit", "Admin", new { id = Model.User_Id })'" class="btn float-left "><i class="fa fa-save "></i>تعديل</button></div></div>
+
+    </fieldset>
+
+    <br />
+    <fieldset>
+
+        <legend>
+            المهام الخاصة بهذا المستخدم
+
+        </legend>
+        <br />
+        <div class="panel" id="RolesTable">
+            @Html.Partial("_ListUserRoleTable", Model)
+        </div>
+    </fieldset>
+}
+<div>
+    @Html.ActionLink("قائمة المستخدمين", "Index", "Admin")
+</div>

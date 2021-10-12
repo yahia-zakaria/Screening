@@ -1,0 +1,381 @@
+﻿@model Studentscreeningsystem.ViewsModel.alldegreeGraduateVM
+@{
+    ViewBag.Title = "Create";
+}
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>*@
+<script src="~/Scripts/jquery.min.js"></script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<script>
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () { $(this).remove(); });
+    }, 4000
+    );</script>
+
+
+<style>
+    .form-control {
+        border-radius: 0;
+    }
+</style>
+<div class="panel-heading">تسجيل درجات الخريج</div>
+@if (TempData["notadddegree"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["notadddegree"]
+
+        </div>
+    </div>
+}
+
+@if (TempData["notFinichaddDegree"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["notFinichaddDegree"]
+
+        </div>
+    </div>
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="panel panel-default" style="border: 1px solid #00a159;     padding: 20px 30px; ">
+        <div class="panel-body" style="font-family: Cairo;">
+            <div class="form-group row">
+
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="text-info">رقم الهوية:</span>
+
+                        </div>
+                        <div class="col-md-6">
+                            @ViewBag.Graduate.Username
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="text-info">الرقم العسكري:</span>
+
+                        </div>
+                        <div class="col-md-6">
+                            @ViewBag.Graduate.Passeword
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="text-info">الإسم:</span>
+
+                        </div>
+                        <div class="col-md-6">
+                            @ViewBag.Graduate.Firstname  @ViewBag.Graduate.Lastname
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" value="@ViewBag.IdGraduate" name="IdGraduate" />
+
+
+
+
+        </div>
+    </div>
+
+    @*/*****************الوزن/الطول******************/*@
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>الوزن/الطول</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-5">
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.lenght, " الطول", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.lenght, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.lenght, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.weight, " الوزن", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.weight, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.weight, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+
+    @*/****************المتطلبات الأكاديمية*******************/*@
+    if (@ViewBag.RequirementMaterial.Count > 0)
+    {
+        <br />
+        <div class="row">
+
+            <fieldset class="col-md-12">
+                <legend>المتطلبات الأكاديمية</legend>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            @for (int i = 0; i < @ViewBag.RequirementMaterial.Count; i++)
+                            {
+                                <div class="col-md-3 ">
+                                    <label class="control-label col-md-4 text-info">@ViewBag.RequirementMaterial[i].NameRequirement</label>
+
+                                    @Html.HiddenFor(model => model.degreeMatrial[i].IdRequirement, new { @Value = @ViewBag.RequirementMaterial[i].IdRequirement })
+
+                                    <div class="row">
+                                        <div class="input-group mb-3 col-md-10">
+                                            @Html.EditorFor(model => model.degreeMatrial[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                            @*<div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                                </div>*@
+                                            @Html.ValidationMessageFor(model => model.degreeMatrial[i].percentage, "", new { @class = "text-danger" })
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+
+    @*/****************السلوك والمواظبة*******************/*@
+    if (@ViewBag.Requirementsuplement.Count > 0)
+    {
+        <br />
+        <div class="row">
+
+            <fieldset class="col-md-12">
+                <legend>السلوك والمواظبة</legend>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            @for (int i = 0; i < @ViewBag.Requirementsuplement.Count; i++)
+                            {
+                                <div class="col-md-6">
+                                    <label class="control-label col-md-4 text-info">@ViewBag.Requirementsuplement[i].NameRequirement</label>
+
+                                    @Html.HiddenFor(model => model.degreesupplement[i].IdRequirement, new { @Value = @ViewBag.Requirementsuplement[i].IdRequirement })
+
+                                    <div class="row">
+                                        <div class="input-group mb-3 col-md-5">
+                                            @Html.EditorFor(model => model.degreesupplement[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                            @*<div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                                </div>*@
+                                            @Html.ValidationMessageFor(model => model.degreesupplement[i].percentage, "", new { @class = "text-danger" })
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+
+
+    @*/****************متطلبات بدنية*******************/*@
+    if (@ViewBag.RequirementFitness.Count > 0)
+    {
+        <br />
+        <div class="row">
+
+            <fieldset class="col-md-12">
+                <legend>متطلبات بدنية</legend>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            @for (int i = 0; i < @ViewBag.RequirementFitness.Count; i++)
+                            {
+                                <div class="col-md-6 ">
+                                    <label class="control-label col-md-4 text-info">@ViewBag.RequirementFitness[i].NameRequirement</label>
+
+                                    @Html.HiddenFor(model => model.degreeFitness[i].IdRequirement, new { @Value = @ViewBag.RequirementFitness[i].IdRequirement })
+
+                                    <div class="row">
+                                        <div class="input-group mb-3 col-md-5">
+                                            @Html.EditorFor(model => model.degreeFitness[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                            @*<div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                                </div>*@
+                                            @Html.ValidationMessageFor(model => model.degreeFitness[i].percentage, "", new { @class = "text-danger" })
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+
+
+    @*/****************قياس الطالب*******************/*@
+    if (@ViewBag.Requirementmesure.Count > 0)
+    {
+        <br />
+        <div class="row">
+
+            <fieldset class="col-md-12">
+                <legend>النسبة الإجمالية لإختبار قياس عسكري</legend>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            @for (int i = 0; i < @ViewBag.Requirementmesure.Count; i++)
+                            {
+                                <div class="col-md-6 ">
+                                    <label class="control-label col-md-4 text-info">@ViewBag.Requirementmesure[i].NameRequirement</label>
+
+                                    @Html.HiddenFor(model => model.degreeMesure[i].IdRequirement, new { @Value = @ViewBag.Requirementmesure[i].IdRequirement })
+
+                                    <div class="row">
+                                        <div class="input-group mb-3 col-md-5">
+                                            @Html.EditorFor(model => model.degreeMesure[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                            @*<div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">%</span>
+                                                </div>*@
+                                            @Html.ValidationMessageFor(model => model.degreeMesure[i].percentage, "", new { @class = "text-danger" })
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+
+
+    @*/****************متطلبات قيادية*******************/*@
+    if (@ViewBag.RequirementLeadership.Count > 0)
+    {
+        <br />
+        <div class="row">
+
+            <fieldset class="col-md-12">
+                <legend>متطلبات قيادية</legend>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            @for (int i = 0; i < @ViewBag.RequirementLeadership.Count; i++)
+                            {
+                                @Html.HiddenFor(model => model.LeadershipVM[i].IdLeadership, new { @Value = @ViewBag.RequirementLeadership[i].IdLeadership })
+
+                                <div class="col-md-5 ">
+                                    <div class="form-check">
+                                        @Html.ValidationMessageFor(model => model.LeadershipVM[i].IsChecked, "", new { @class = "text-danger" })
+                                        نعم
+                                        @Html.RadioButtonFor(m => m.LeadershipVM[i].IsChecked, "true")
+                                        لا
+                                        @Html.RadioButtonFor(m => m.LeadershipVM[i].IsChecked, "false")
+
+
+                                        <label class="form-check-label">@ViewBag.RequirementLeadership[i].NameLeadership</label>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    }
+    @*/****************المعدل الأكاديمي*******************/*@
+
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>المعدل الأكاديمي</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AverageGraduate, " المعدل", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.AverageGraduate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.AverageGraduate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <BR />
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="  text-left">
+
+                <button type="submit" class="btn  "><i class="fa fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+}

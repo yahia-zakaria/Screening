@@ -1,0 +1,153 @@
+﻿@using System.Globalization;
+@{
+    ViewBag.Title = "اHome Page  of the system";
+}
+<style>
+    .card {
+        padding-top: 10px;
+    }
+
+    .card-img-top {
+        width: 16%;
+    }
+
+    .card-deck {
+        margin-top: 30px;
+        margin-bottom: 30px
+    }
+
+        .card-deck .card {
+            background-color: #e8e8e8
+        }
+
+    a {
+        color: #29504d;
+    }
+
+        a:hover {
+            color: #00a159;
+            text-decoration: none
+        }
+
+    h5 {
+        color: #00a159
+    }
+</style>
+
+
+<p>@User.Identity.Name</p>
+
+
+
+@*Start card-deck 1*@
+<div class="card-deck">
+
+    @*عدد المستخدمين*@
+    <div class="card align-items-center text-center">
+        <img class="card-img-top smallimg" src="~/Content/Home Logo/multiple-users.png" />
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.Nbusers</h5>
+            <a href="~/Admin/Index" class="card-text">عدد المستخدمين</a>
+        </div>
+    </div>
+
+    @*عدد الخريجين*@
+    <div class="card align-items-center text-center">
+        <img class="card-img-top" src="~/Content/Home Logo/graduate-student.png" />
+
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.NbG</h5>
+            <a href="~/Admin/ListGraduate" class="card-text">عدد الخريجين</a>
+        </div>
+    </div>
+
+    @*عدد الأسلحة*@
+    <div class="card align-items-center text-center">
+        <img class="card-img-top" src="~/Content/Home Logo/Sectors.png" />
+
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.NbSector</h5>
+            <a href="~/Sectors/Index" class="card-text">عدد الأسلحة</a>
+        </div>
+    </div>
+
+
+    @*عدد الخريجين الذين تم إدخال درجاتهم*@
+    <div class="card align-items-center text-center">
+
+        <img class="card-img-top" src="~/Content/Home Logo/Degree.png" />
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.NbGD</h5>
+            <a href="~/Admin/GetListGraduateDegree" class="card-text">عدد الخريجين الذين تم إدخال درجاتهم</a>
+        </div>
+    </div>
+</div>
+
+@*Final card-deck 1*@
+
+@*------------------------------------------------------------------------------------------------------------------------*@
+
+@*Start card-deck 2*@
+
+<div class="card-deck">
+
+    @*عدد الخريجين الذين لم يتم إدخال درجاتهم*@
+    <div class="card align-items-center text-center">
+        <img class="card-img-top smallimg" src="~/Content/Home Logo/Non Degree.png" />
+
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.NbGND</h5>
+            <a href="~/Admin/GetListGraduateNoNDegree" class="card-text">عدد الخريجين الذين لم يتم إدخال درجاتهم</a>
+        </div>
+    </div>
+
+    @*عدد الخريجين الذين لم يقوموا بإدخال رغباتهم*@
+    <div class="card align-items-center text-center">
+        <img class="card-img-top" src="~/Content/Home Logo/Non GraduateWishes.png" />
+
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.NbGNW</h5>
+            <a href="~/Admin/GetListGraduateNoNWishes" class="card-text">عدد الخريجين الذين لم يقوموا بإدخال رغباتهم</a>
+        </div>
+    </div>
+
+    @*عدد الخريجين الذين أتموا إدخال رغباتهم*@
+    <div class="card align-items-center text-center">
+
+        <img class="card-img-top" src="~/Content/Home Logo/GraduateWishes.png" />
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.NBNG</h5>
+            <a href="~/Admin/GetListGraduateWishes" class="card-text">عدد الخريجين الذين أتموا إدخال رغباتهم</a>
+        </div>
+    </div>
+
+    @*عدد الخريجين المستبعدين من عملية التوزيع*@
+    <div class="card align-items-center text-center">
+        <img class="card-img-top" src="~/Content/Home Logo/Sortable.png" />
+
+        <div class="card-body">
+            <h5 class="card-title counter-count">@ViewBag.NBGInsort</h5>
+            <a href="~/Admin/ListGraduateInsortable" class="card-text">عدد الخريجين المستبعدين من عملية التوزيع</a>
+        </div>
+    </div>
+</div>
+
+@*Final card-deck 2*@
+
+
+@*Start Icons counter*@
+@section scripts {
+    <script>
+        $('.counter-count').each(function () {
+            $(this).prop('Counter', 0).animate({
+                Counter: $(this).text()
+            }, {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function (now) {
+                        $(this).text(Math.ceil(now));
+                    }
+                });
+        });</script>
+}
+@*Final Icons counter*@

@@ -1,0 +1,76 @@
+﻿
+@page {
+    size: A4 ; 
+}
+
+@page:right {
+    @bottom-left {
+        margin: 10pt 0 30pt 0;
+        border-top: .25pt solid #666;
+        content: "Our Cats";
+        font-size: 9pt;
+        color: #333;
+    }
+
+    @bottom-right {
+        margin: 10pt 0 30pt 0;
+        border-top: .25pt solid #666;
+        content: counter(page);
+        font-size: 9pt;
+    }
+}
+.T{
+    width:250px;
+    display:inline-block;
+}
+.C {
+    display: inline-block;
+}
+#Wishes {
+    margin-top: 10%
+}
+#bill {
+    display: block;
+    width: 100%
+}
+#logo, #title {
+    display: inline-block;
+}
+
+#entete {
+    width: 100%
+}
+
+#title {
+    width: 50%;
+    margin: auto;
+}
+
+#logo {
+    width: 48%;
+}
+
+#info {
+    margin-top: 5%;
+    border:solid 0.5px black;
+    margin-bottom:5%
+}
+
+ul {
+    list-style: none;
+}
+#singnature {
+    
+    width: 170px;
+    height: 250px;
+   
+    position: absolute;
+    bottom: 0;
+    left:0
+}
+#Sig {
+    width: 150px;
+    height: 170px;
+    /*border: solid 1px black;*/
+    
+}

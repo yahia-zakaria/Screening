@@ -1,0 +1,171 @@
+﻿
+@{
+    /**/
+
+    ViewBag.Title = "GetDegreeGraduateExcel";
+}
+
+<style>
+    .custom-file-input ~ .custom-file-label::after {
+        content: "إختر";
+        left: 0;
+        right: auto;
+        border-left-width: 0;
+        border-right: inherit;
+    }
+    
+</style>
+
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="panel-heading">إضافة درجات الخريجين بملف إكسل </div>
+    if (TempData["SuccessuploadedDegExcel"] != null)
+    {
+        <div class="alert-messages text-center">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @TempData["SuccessuploadedDegExcel"]
+
+            </div>
+        </div>
+    }
+    if (TempData["warninguploadedDegExcel"] != null)
+    {
+        <div class="alert-messages text-center">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @TempData["warninguploadedDegExcel"]
+
+            </div>
+        </div>
+    }
+    if (TempData["DangeruploadedDegExcel"] != null)
+    {
+        <div class="alert-messages text-center">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @TempData["DangeruploadedDegExcel"]
+
+            </div>
+        </div>
+    }
+
+        <div class="col-md-12">
+
+            <div class="form-group">
+                <label class="text-info">المتطلب</label>
+                <select id="Requirement" class="form-control">
+                    @foreach (var item in ViewBag.Requirments)
+                    {
+                        <option value="@item.IdRequirement">@item.NameRequirement</option>
+                    }
+                </select>
+
+            </div>
+            <div class="form-group ">
+                <label class="text-info">ملف الإكسل لدرجات الخريجين</label>
+                <br />
+                <div class="custom-file " style="width: auto;">
+                    <input type="file" value="Uploadfile" class="custom-file-input form-control " id="excelDegree">
+                    <label class="custom-file-label" for="customFile">لا يوجد ملف</label>
+                </div>
+            </div>
+            <span id="validationexcelDegree"class="field-validation-valid text-danger" data-valmsg-for="excelDegree" data-valmsg-replace="true"></span>
+        </div>
+    <br />
+    <div class="col-md-12">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="button" class="btn " onclick="save_DegreeGraduate_excel()" id="deletep">حفظ </button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+       
+            // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var val = $(this).val().toLowerCase(),
+                regex = new RegExp("(.*?)\.(xlsx|xls)$");
+
+            if (!(regex.test(val))) {
+                $(this).val('');
+                $(this).siblings(".custom-file-label").addClass("selected").html('لا يوجد ملف');
+                $("#validationexcelDegree").html('الرجاء إدخال ملف من نوع إكسل');
+                
+            }
+            else {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                $("#validationexcelDegree").html('');
+            }
+        });
+          
+
+        
+   
+
+    function save_DegreeGraduate_excel() {
+        var _validFileExtensions = [".xlsx"];
+        var isvalid = true;
+        var idRequirment = $("#Requirement").val();
+        if ($("#excelDegree").val() == "") {
+            $("#validationexcelDegree").html('هذا الحقل مطلوب, الرجاء إدخال ملف من نوع إيكسل');
+            isvalid = false;
+        } else {
+            $("#validationexcelDegree").html('');
+        }
+        if (isvalid) {
+
+            var formData = new FormData();
+            var FileUpload = $("#excelDegree").get(0);
+            var files = FileUpload.files;
+            formData.append("file", files[0]);
+            formData.append("idrequirement", idRequirment);
+            $.ajax(
+                {
+                    url: '@Url.Action("save_DegreeGraduate_excel", "alldegreeGraduate")',
+                    type: 'POST',
+                    async: true,
+
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+
+                    success: function (message) {
+
+
+                    }
+                });
+            location.reload();
+        }
+    }
+    </script>
+}
+

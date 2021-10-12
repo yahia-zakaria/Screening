@@ -1,0 +1,307 @@
+﻿@using System.Globalization;
+
+
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        @ViewBag.Title - نظام توزيع خريجي كلية الملك عبد العزيز الحربية
+    </title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet">
+    <link href="~/Content/MVCGrid.css" rel="stylesheet" />
+    <link href="~/Content/print.css" rel="stylesheet" media="print" />
+</head>
+
+<link href="~/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<style>
+    .ArDate {
+        /*background-color: #29504d;*/
+        text-align: center;
+        margin-top: -41px;
+        margin-right: 35%;
+        color: white;
+    }
+
+    #Home {
+        margin-left: 73px;
+        float: left;
+        text-align: center;
+        padding: 12px;
+        color: white;
+        text-decoration: none;
+        font-size: 17px;
+        border-left: white 1px solid;
+    }
+        /* Navbar links on mouse-over */
+        #Home:hover {
+            background-color: none;
+        }
+
+    .fa-fw:hover {
+        color: #00a159;
+        background-color: #29504d;
+    }
+</style>
+<body>
+    <div class="topheader">
+        <div class="row col-md-12">
+            <div class="col-md-4 pull-right">
+                <span>
+                    اسم المستخدم :
+                    @{
+                        if (Session["Lastname"] == null && Session["Firstname"] == null)
+                        {
+                            Response.Redirect(Url.Action("Login", "Login"));
+                        }
+                        else
+                        {
+                            var Lastname = Session["Lastname"].ToString();
+                            var Firstname = Session["Firstname"].ToString();
+                            @(Firstname + " " + Lastname)
+                        }
+
+
+                    }
+
+                </span>
+            </div>
+            <div class="col-md-4">
+                <span class="ArDate">
+
+                    @DateTime.Now.ToString("dd MMM yyyy", new CultureInfo("ar")) هـ<br>
+
+                </span>
+            </div>
+            <div class="col-md-4 pull-left">
+                @Html.ActionLink("تسجيل الخروج", "LogOut", "Login", new { }, new { @class = "linkout" })
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+    <div class="logo navbar-fixed-top">
+
+        <a class="h_logo" href="~/Home/Index">
+            <img src="~/Content/img/RoyalSaudiLandForces.png" />
+        </a>
+
+        <span class="title">
+            نظام توزيع خريجي كلية الملك عبد العزيز الحربية
+        </span>
+
+
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown" style="margin-right: -52px;">
+                    <a id="Home" class="nav-link " href="~/Home/Index"><i class="fa fa-fw fa-home"></i> </a>
+                </li>
+
+
+                @if (ViewContext.Controller.HasPermissionUser("Sectors-Create") || ViewContext.Controller.HasPermissionUser("Sectors-Index") || ViewContext.Controller.HasPermissionUser("RequirementSectorVM-EditSector") || ViewContext.Controller.HasPermissionUser("RequirementSectorVM-RaportsSector") || ViewContext.Controller.HasPermissionUser("Sectors-Delete"))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            إدارة الأسلحة
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            @if (ViewContext.Controller.HasPermissionUser("Sectors-Create"))
+                            {
+                                @Html.ActionLink("إضافة سلاح", "Create", "Sectors", new { }, new { @class = "dropdown-item" })
+                            }
+                            @if (ViewContext.Controller.HasPermissionUser("Sectors-Index") || ViewContext.Controller.HasPermissionUser("RequirementSectorVM-EditSector") || ViewContext.Controller.HasPermissionUser("RequirementSectorVM-RaportsSector") || ViewContext.Controller.HasPermissionUser("Sectors-Delete"))
+                            {
+
+                                @Html.ActionLink("تفاصيل السلاح", "Index", "Sectors", new { }, new { @class = "dropdown-item" })
+                            }
+
+                        </div>
+                    </li>
+                }
+
+                @if (ViewContext.Controller.HasPermissionUser("Requirements-Create") || ViewContext.Controller.HasPermissionUser("Requirements-Index") || ViewContext.Controller.HasPermissionUser("Requirements-Delete") || ViewContext.Controller.HasPermissionUser("Requirements-Edit") || ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Create") || ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Index") || ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Delete") || ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Edit"))
+                {
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            إدارة المتطلبات
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            @if (ViewContext.Controller.HasPermissionUser("Requirements-Create"))
+                            {
+                                @Html.ActionLink("إضافة متطلب", "Create", "Requirements", new { }, new { @class = "dropdown-item" })
+                            }
+                            @if (ViewContext.Controller.HasPermissionUser("Requirements-Index") || ViewContext.Controller.HasPermissionUser("Requirements-Delete") || ViewContext.Controller.HasPermissionUser("Requirements-Edit"))
+                            {
+                                @Html.ActionLink("تفاصيل  متطلب", "Index", "Requirements", new { }, new { @class = "dropdown-item" })
+                            }
+                            @if (ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Create"))
+                            {
+                                @Html.ActionLink("إضافة متطلب قيادي", "Create", "Leadershiprequirements", new { }, new { @class = "dropdown-item" })
+                            }
+                            @if (ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Index") || ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Delete") || ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Edit"))
+                            {
+                                @Html.ActionLink("تفاصيل  متطلب قيادي", "Index", "Leadershiprequirements", new { }, new { @class = "dropdown-item" })
+                            }
+
+                        </div>
+                    </li>
+
+                }
+
+                @if (ViewContext.Controller.HasPermissionUser("alldegreeGraduate-GetDegreeGraduateExcel") ||ViewContext.Controller.HasPermissionUser("Admin-GetListGraduateNoNWishes") || ViewContext.Controller.HasPermissionUser("Admin-GetListGraduateWishes") || ViewContext.Controller.HasPermissionUser("Admin-GetListGraduateDegree") || ViewContext.Controller.HasPermissionUser("Admin-ListGraduate") || ViewContext.Controller.HasPermissionUser("Admin-GetListGraduateNoNDegree") || ViewContext.Controller.HasPermissionUser("alldegreeGraduate-EditGraduate") 
+                     || ViewContext.Controller.HasPermissionUser("alldegreeGraduate-RaportsGraduate") || ViewContext.Controller.HasPermissionUser("alldegreeGraduate-Create"))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            إدارة الخريج
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                            @Html.ActionLink("قائمة الخريجين", "ListGraduate", "Admin", new { }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("قائمة الخريجين الذين لم يتم إدخال درجاتهم", "GetListGraduateNoNDegree", "Admin", new { }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("قائمة الخريجين الذين تم إدخال درجاتهم", "GetListGraduateDegree", "Admin", new { }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("قائمة الخريجين الذين لم يقوموا بترتيب رغباتهم", "GetListGraduateNoNWishes", "Admin", new { }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("قائمة الخريجين الذين قاموا بترتيب رغباتهم", "GetListGraduateWishes", "Admin", new { }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("إضافة درجات الخريجين بملف إكسل", "GetDegreeGraduateExcel", "alldegreeGraduate", new { }, new { @class = "dropdown-item" })
+                            @*@Html.ActionLink("قائمة الخريجين مع درجات المواد", "GetListGraduateSubjectMark", "Admin", new { }, new { @class = "dropdown-item" })*@
+                            @*@Html.ActionLink("قائمة الخريجين مع ترتيب الرغبات", "GetListGraduateChoice", "Admin", new { }, new { @class = "dropdown-item" })*@
+                        </div>
+
+
+                    </li>
+                }
+
+                @if (ViewContext.Controller.HasPermissionUser("GraduateArrangementVM-Index"))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            لجنة التعيين
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            @Html.ActionLink("توزيع الخريجين", "Index", "GraduateArrangementVM", new { }, new { @class = "dropdown-item" })
+                            @Html.ActionLink(" قائمة الخريجين المستبعدين من التوزيع", "ListGraduateInsortable", "Admin", new { }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("قائمة الخريجين بعد التوزيع", "AfterSortableGraduate", "GraduateArrangementVM", new { }, new { @class = "dropdown-item" })
+                        </div>
+                    </li>
+                }
+                @if (ViewContext.Controller.HasPermissionUser("GraduateWishesVM-SortableWishes") && !ViewContext.Controller.IsAdminSys())
+
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            بوابة الخرجين
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                            @Html.ActionLink("إدخال الرغبات", "SortableWishes", "GraduateWishesVM", new { }, new { @class = "dropdown-item" })
+                        </div>
+                    </li>
+                }
+                @{
+                    if (ViewContext.Controller.IsAdminSys())
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                إدارة المستخدمين
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @Html.ActionLink("المستخدمين", "Index", "Admin", new { }, new { @class = "dropdown-item" })
+                                @Html.ActionLink("المهام ", "RoleIndex", "Admin", new { }, new { @class = "dropdown-item" })
+                                @Html.ActionLink("الصلاحيات", "PermissionIndex", "Admin", new { }, new { @class = "dropdown-item" })
+                                @Html.ActionLink("السجل", "Index", "MouvementUsers", new { }, new { @class = "dropdown-item" })
+                            </div>
+                        </li>
+
+                    }
+                }
+
+
+
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="MyFooter" style="text-align: center; color:#b2bec4">
+            <p>نظام توزيع خريجي كلية الملك عبد العزيز الحربية- جميع الحقوق محفوظة للقوات البرية الملكية السعودية   &copy; @DateTime.Now.Year  </p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script src="~/Scripts/MvcGrid/mvc-grid.js"></script>
+
+    <script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+
+        MvcGrid.prototype.lang = {
+            text: {
+                'contains': 'يساوي',
+                'equals': 'يعادل',
+                'not-equals': 'لا يساوي',
+                'starts-with': 'يبدأ ب',
+                'ends-with': 'ينتهي ب'
+            },
+            number: {
+                'equals': 'يساوي',
+                'not-equals': 'لا يساوي',
+                'less-than': 'أصغر من',
+                'greater-than': 'أكبر من',
+                'less-than-or-equal': 'أصغر أو يساوي',
+                'greater-than-o-requal': 'أكبر أو يساوي'
+            },
+            date: {
+                'equals': 'Egale',
+                'not-equals': 'Pas égal',
+                'earlier-than': 'Inférieur à',
+                'later-than': 'Supérieur à',
+                'earlier-than-or-equal': 'Inférieur ou égale à',
+                'later-than-or-equal': 'Supérieur ou égale à'
+            },
+            enum: {
+                'equals': 'يساوي',
+                'not-equals': 'لا يساوي'
+            },
+            boolean: {
+                'equals': 'يساوي',
+                'not-equals': 'لا يساوي'
+            },
+            guid: {
+                'equals': 'يساوي',
+                'not-equals': 'لا يساوي',
+            },
+            filter: {
+                'apply': '✔',
+                'remove': '✘'
+            },
+            operator: {
+                'select': '',
+                'and': 'و',
+                'or': 'أو'
+            }
+        };
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

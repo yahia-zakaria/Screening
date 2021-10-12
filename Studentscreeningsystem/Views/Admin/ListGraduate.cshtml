@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.USER>
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض قائمة الخريجين " })
+@{
+    ViewBag.Title = "قائمة الخريجين";
+}
+<div class="panel-heading"> قائمة الخريجين </div>
+@if (TempData["ErreurWishes"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErreurWishes"]
+    </div>
+}
+<div class="row justify-content-md-center" style="font-family: Cairo;">
+    <div class="col-md-12 ">
+        @using (Html.BeginForm("ExportToExcel", "alldegreeGraduate", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-12 ">
+                    <input type="submit" value="" class="buttonexcel float-md-left" />
+                    @Html.ActionLink(" ", "CreatePdf", "alldegreeGraduate", new { }, new { @class = "buttonPDF float-md-left" })
+                </div>
+            </div>
+        }
+        @(Html
+                            .Grid(Model)
+                            .Build(columns =>
+                            {
+                                columns.Add(model => model.Username).Titled("رقم الهوية").Sortable(false).Filterable(true);
+                                columns.Add(model => model.Passeword).Titled("الرقم العسكرى").Sortable(false).Filterable(true);
+                                columns.Add(model => model.Firstname).Titled("الإسم").Sortable(false).Filterable(true);
+                                columns.Add(model => model.Lastname).Titled("اللقب").Sortable(false).Filterable(true);
+
+
+                        //عمليات البرنامج
+                        if (ViewContext.Controller.HasPermissionUser("alldegreeGraduate-Create"))
+                                {
+                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Create", "alldegreeGraduate", new { id = model.User_Id }, new { @class = "faicone fa fa-save", title = "تسجيل درجات الخريج" }));
+                                }
+                                if (ViewContext.Controller.HasPermissionUser("alldegreeGraduate-EditGraduate"))
+                                {
+                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "EditGraduate", "alldegreeGraduate", new { id = model.User_Id }, new { @class = "faicone fa fa-edit", title = "تعديل المستخدم" }));
+                                }
+                                if (ViewContext.Controller.HasPermissionUser("alldegreeGraduate-RaportsGraduate"))
+                                {
+                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RaportsGraduate", "alldegreeGraduate", new { id = model.User_Id }, new { @class = "faicone fa fa-plus", title = "درجات الخريج" }));
+                                }
+                                if (ViewContext.Controller.HasPermissionUser("GraduateWishesVM-Index"))
+                                {
+                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Index", "GraduateWishesVM", new { IdGraduate = model.User_Id }, new { @class = "faicone fa fa-list", title = "عرض قائمة رغبات الخريج" }));
+                                }
+
+                            })
+                            .Empty("لا يوجد خريجين")
+                            .Id("my-ajax-grid")
+                            .Css("css-classes") // Overwrites all classes with the new ones
+                            .AppendCss("table-hover")
+                            .Pageable(pager =>
+                            {
+                                pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 10, "10" }, { 20, "20" }, { 100, "100" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 5;
+                            })
+
+                        .Filterable()
+                        .Sortable()
+        )
+
+
+
+    </div>
+</div>
+<br />
+
+
+
+@Html.ActionLink("قائمة الخريجين الذين تم إدخال درجاتهم", "GetListGraduateDegree", "Admin")<br />
+@Html.ActionLink("قائمة الخريجين الذين لم  يتم إدخال درجاتهم", "GetListGraduateNoNDegree", "Admin")
+
+<br>

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.USER>
+@Html.Action("Create", "MouvementUsers", new {userid = Session["User_Id"], link = "عرض قائمة الخريجين الذين قاموا بترتيب رغباتهم"})
+@{
+    ViewBag.Title = "قائمة الخريجين الذين قاموا بترتيب رغباتهم";
+}
+
+<div class="panel-heading">قائمة الخريجين الذين قاموا بترتيب رغباتهم</div>
+
+<div class="row justify-content-md-center" style="font-family: Cairo;">
+    <div class="col-md-12 ">
+        <table id="DataTable" class="table table-responsive">
+            <thead>
+            <tr>
+                <th>السجل المدني</th>
+                <th>الرقم العسكري</th>
+                <th>الإسم</th>
+                <th>الرغبة 1</th>
+                <th>الرغبة 2</th>
+                <th>الرغبة 3</th>
+                <th>الرغبة 4</th>
+                <th>الرغبة 5</th>
+                <th>الرغبة 6</th>
+                <th>التفاصيل</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Passeword</td>
+                    <td>@user.Firstname @user.Lastname</td>
+                    @if (user.GraduateWishes.Any())
+                    {
+                        for (int i = 0; i < 6; i++)
+                        {
+                            <td>@user.GraduateWishes[i].Sector.NameSector</td>
+                        }
+                    }
+                    <td>
+                        <div class="btn-group">
+                            <a href="/GraduateWishesVM/Index?IdGraduate=@user.User_Id" class="btn btn-success btn-sm" style="margin-left:2px ">الرغبات</a>
+                            <a href="/alldegreeGraduate/RaportsGraduate?id=@user.User_Id" class="btn btn-info btn-sm">الدرجات</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        @section Scripts{
+            <script>
+                $(document).ready(function() {
+                    var table = $("#DataTable").DataTable({
+                        "language": {
+                            "search": "البحث :",
+                            "sLengthMenu": "الصفحات : _MENU_ ",
+                            "paginate": {
+                                "previous": "السابق",
+                                "next": "التالي"
+                            },
+                            "info": "الصفحة _START_ من _END_ المجموع : _TOTAL_ ",
+                            "infoEmpty": "لا يوجد عرض",
+                        }
+                    });
+                });
+
+
+            </script>
+        }
+       
+
+
+    </div>
+</div>
+<br/>
+
+
+@Html.ActionLink("قائمة معدلات الخريجين", "Index", "GraduateArrangementVM")
+
+<br>

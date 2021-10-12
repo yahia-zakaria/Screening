@@ -1,0 +1,459 @@
+﻿
+@model Studentscreeningsystem.ViewsModel.RapportSectorVM
+@{
+    ViewBag.Title = "تعديل متطلب سلاح";
+}
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>*@
+<script src="~/Scripts/jquery.min.js"></script>
+<script>
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () { $(this).remove(); });
+    }, 4000
+    );
+    $(function () {
+        $(document).on("change", ".uploadFile", function () {
+            var uploadFile = $(this);
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+
+                reader.onloadend = function () { // set image data as background of div
+                    //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                    uploadFile.closest(".imgUp").find('.imagePreview').css({ "background-image": "url(" + this.result + ")", "background-size": "150px 150px", "background-repeat": "no-repeat" });
+                }
+            }
+
+        });
+    });
+</script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<style>
+    .form-control {
+        border-radius: 0;
+        font-family: Cairo;
+    }
+
+
+    .imagePreview {
+        width: 100%;
+        height: 150px;
+        background-position: center center;
+      
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+        box-shadow: 0px -3px 6px 2px rgba(0,0,0,0.2);
+        
+    }
+
+    .btn-primary {
+        display: block;
+        border-radius: 0px;
+        box-shadow: 0px 4px 6px 2px rgba(0,0,0,0.2);
+        margin-top: -5px;
+    }
+
+    .imgUp {
+        margin-bottom: 15px;
+    }
+
+</style>
+<div class="panel-heading">تعديل متطلبات السلاح</div>
+
+<form method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <input id="IdSector" name="IdSector" type="hidden" value="@Model.IdSector" />
+
+    <div class="panel panel-default" style="border: 1px solid #00a159;     padding: 20px 30px; ">
+        <div class="panel-body" style="font-family: Cairo;">
+            <div class="row">
+
+
+                <div class="col-sm-2 imgUp">
+                    <div class="imagePreview" style="background:url(@Url.Content("~/SectorsLogo/"+@Model.LogoPath)); background-size: 150px 150px; background-repeat: no-repeat"></div>
+                    <label class="btn btn-primary">
+                        تعديل الشعار<input type="file" name="LogoPath" id="LogoPath" class="uploadFile img" value="@Model.LogoPath" style="width: 0px;height: 0px;overflow: hidden;">
+                    </label>
+                </div><!-- col-2 -->
+
+
+
+
+
+                <div class="col-md-9">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NameSector, "  مسمى السلاح", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.NameSector, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.NameSector, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @*/*****************الطول******************/*@
+    <br />
+    <div class="row">
+        @Html.HiddenFor(model => model.Idspesification)
+        <fieldset class="col-md-12">
+            <legend>الطول</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-5">
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Minlenght, "  الطول لا يقل عن", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Minlenght, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Minlenght, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Maxlenght, " الطول لا يزيد عن  ", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Maxlenght, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Maxlenght, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    @*/*****************الوزن******************/*@
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>الوزن</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-5">
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Minweight, " الوزن لا يقل عن", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Minweight, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Minweight, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Maxweight, " الوزن لا يزيد عن", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Maxweight, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Maxweight, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    @*/****************المتطلبات الأكاديمية*******************/*@
+    @if (@Model.RequirementMatrial.Count > 0)
+    {
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>المتطلبات الأكاديمية</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        @for (int i = 0; i < @Model.RequirementMatrial.Count; i++)
+                        {
+                            <div class="col-md-6 ">
+                                <label class="control-label col-md-4 text-info">@Model.RequirementMatrial[i].NameRequirement</label>
+
+
+                                @Html.HiddenFor(model => model.RequirementMatrial[i].Id)
+                                @Html.HiddenFor(model => model.RequirementMatrial[i].IdRequirement)
+                                <div class="row">
+                                    <div class="input-group mb-3 col-md-5">
+                                        @Html.EditorFor(model => model.RequirementMatrial[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.RequirementMatrial[i].percentage, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    @*<div class="input-group mb-3 col-md-5">
+                                        @Html.DropDownListFor(model => model.RequirementMatrial[i].priority,
+                                             new SelectList(new List<SelectListItem> {
+                                                      new SelectListItem { Text = "1", Value = "1"},
+                                                       new SelectListItem { Text = "2", Value = "2"},
+                                                      new SelectListItem { Text = "3", Value = "3"}
+                                                  }, "Value", "Text"),
+                                              new { @class = "custom-select" })
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">الأولوية</label>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.RequirementMatrial[i].priority, "", new { @class = "text-danger" })
+                                    </div>*@
+                                </div>
+                            </div>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    }
+
+    @*/****************السلوك والمواظبة*******************/*@
+    @if (@Model.Requirementsupplement.Count > 0)
+    {
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>السلوك والمواظبة</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        @for (int i = 0; i < @Model.Requirementsupplement.Count; i++)
+                        {
+                            <div class="col-md-6 ">
+                                <label class="control-label col-md-4 text-info">@Model.Requirementsupplement[i].NameRequirement</label>
+                                @Html.HiddenFor(model => model.Requirementsupplement[i].Id)
+                                @Html.HiddenFor(model => model.Requirementsupplement[i].IdRequirement)
+                                <div class="row">
+                                    <div class="input-group mb-3 col-md-5">
+                                        @Html.EditorFor(model => model.Requirementsupplement[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.Requirementsupplement[i].percentage, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    @*<div class="input-group mb-3 col-md-5">
+                                        @Html.DropDownListFor(model => model.Requirementsupplement[i].priority,
+                                             new SelectList(new List<SelectListItem> {
+                                                      new SelectListItem { Text = "1", Value = "1"},
+                                                       new SelectListItem { Text = "2", Value = "2"},
+                                                      new SelectListItem { Text = "3", Value = "3"}
+                                                  }, "Value", "Text"),
+                                              new { @class = "custom-select" })
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">الأولوية</label>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.Requirementsupplement[i].priority, "", new { @class = "text-danger" })
+                                    </div>*@
+                                </div>
+                            </div>
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    }
+
+
+    @*/****************متطلبات بدنية*******************/*@
+    @if (@Model.RequirementFitness.Count > 0)
+    {
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>متطلبات بدنية</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        @for (int i = 0; i < @Model.RequirementFitness.Count; i++)
+                        {
+                            <div class="col-md-6 ">
+                                <label class="control-label col-md-4 text-info">@Model.RequirementFitness[i].NameRequirement</label>
+
+                                @Html.HiddenFor(model => model.RequirementFitness[i].Id)
+                                @Html.HiddenFor(model => model.RequirementFitness[i].IdRequirement)
+                                <div class="row">
+                                    <div class="input-group mb-3 col-md-5">
+                                        @Html.EditorFor(model => model.RequirementFitness[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.RequirementFitness[i].percentage, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    @*<div class="input-group mb-3 col-md-5">
+                                        @Html.DropDownListFor(model => model.RequirementFitness[i].priority,
+                                             new SelectList(new List<SelectListItem> {
+                                                      new SelectListItem { Text = "1", Value = "1"},
+                                                       new SelectListItem { Text = "2", Value = "2"},
+                                                      new SelectListItem { Text = "3", Value = "3"}
+                                                  }, "Value", "Text"),
+                                              new { @class = "custom-select" })
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">الأولوية</label>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.RequirementFitness[i].priority, "", new { @class = "text-danger" })
+                                    </div>*@
+                                </div>
+                            </div>
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    }
+
+
+    @*/****************قياس الطالب*******************/*@
+    @if (@Model.RequirementMesure.Count > 0)
+    {
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>النسبة الإجمالية لإختبار قياس عسكري</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        @for (int i = 0; i < @Model.RequirementMesure.Count; i++)
+                        {
+                            <div class="col-md-6 ">
+                                <label class="control-label col-md-4 text-info">@Model.RequirementMesure[i].NameRequirement</label>
+
+                                @Html.HiddenFor(model => model.RequirementMesure[i].Id)
+                                @Html.HiddenFor(model => model.RequirementMesure[i].IdRequirement)
+                                <div class="row">
+                                    <div class="input-group mb-3 col-md-5">
+                                        @Html.EditorFor(model => model.RequirementMesure[i].percentage, new { htmlAttributes = new { @class = "form-control" } })
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">%</span>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.RequirementMesure[i].percentage, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    @*<div class="input-group mb-3 col-md-5">
+                                        @Html.DropDownListFor(model => model.RequirementMesure[i].priority,
+                                             new SelectList(new List<SelectListItem> {
+                                                      new SelectListItem { Text = "1", Value = "1"},
+                                                       new SelectListItem { Text = "2", Value = "2"},
+                                                      new SelectListItem { Text = "3", Value = "3"}
+                                                  }, "Value", "Text"),
+                                              new { @class = "custom-select" })
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">الأولوية</label>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.RequirementMesure[i].priority, "", new { @class = "text-danger" })
+                                    </div>*@
+                                </div>
+                            </div>
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    }
+
+
+
+    @*/****************متطلبات قيادية*******************/*@
+    @if (@Model.RequirementLeadershipVM.Count > 0)
+    {
+    <br />
+    <div class="row">
+
+        <fieldset class="col-md-12">
+            <legend>متطلبات قيادية</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        @for (int i = 0; i < @Model.RequirementLeadershipVM.Count; i++)
+                        {
+
+                            @Html.HiddenFor(model => model.RequirementLeadershipVM[i].Id)
+
+
+                            <div class="col-md-5 ">
+                                <div class="form-check">
+                                    @*@Html.EditorFor(model => model.LeadershipVM[i].IsChecked, new { htmlAttributes = new { @class = "form-check-input" } })*@
+                                    @Html.ValidationMessageFor(model => model.RequirementLeadershipVM[i].IsChecked, "", new { @class = "text-danger" })
+                                    نعم
+                                    @Html.RadioButtonFor(m => m.RequirementLeadershipVM[i].IsChecked, "true")
+                                    لا
+                                    @Html.RadioButtonFor(m => m.RequirementLeadershipVM[i].IsChecked, "false")
+
+
+                                    <label class="form-check-label">@Model.RequirementLeadershipVM[i].NameLeadership</label>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+
+    }
+
+
+    <br />
+    <div class="row">
+        <fieldset class="col-md-12">
+            <legend>إحتياج السلاح</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-5 ">
+                            @Html.EditorFor(model => model.NbGraduates, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.NbGraduates, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <br />
+    <div class="col-md-12">
+        <div class="form-group">
+            <div class="  text-left">
+
+                <button type="submit" class="btn  "><i class="fa fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+</form>

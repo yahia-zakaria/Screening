@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.USER>
+
+<div class="panel" id="divUsers">
+
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-12 ">
+
+@(Html
+                        .Grid(Model)
+                        .Build(columns =>
+                            {
+                                columns.Add(model => model.Username).Titled("رقم الهوية").Filterable(true);
+                                columns.Add(model => model.Firstname).Titled("الإسم").Filterable(true);
+                                columns.Add(model => model.Lastname).Titled("اللقب").Filterable(true);
+                                columns.Add(model => model.Title).Titled("المسمى الوظيفي").Filterable(true);
+
+
+                            //عمليات البرنامج
+                            columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "UserInactive", new { id = model.User_Id }, new { @class = "faicone fa fa-user-times", title = "إلغاء تفعيل المستخدم" }));
+                                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "UserEdit", "Admin", new { id = model.User_Id }, new { @class = "faicone fa fa-edit", title = "تعديل المستخدم" }));
+                                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "UserDetails", new { id = model.User_Id }, new { @class = "faicone fa fa-plus", title = "تفاصيل المستخدم" }));
+                            })
+                            .Empty("لم يتم العثور على مستخدمين")
+                                .Css("css-classes") // Overwrites all classes with the new ones
+                                .AppendCss("table-hover")
+                            .Pageable(pager =>
+                            {
+                                pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 5, "5" }, { 10, "10" } };
+                                pager.ShowPageSizes = true;
+                                pager.PagesToDisplay = 3;
+                                pager.CurrentPage = 1;
+                                pager.RowsPerPage = 5;
+                            })
+)
+</div>
+</div>
+</div>

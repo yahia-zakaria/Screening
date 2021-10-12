@@ -1,0 +1,76 @@
+﻿@model Studentscreeningsystem.Models.USER
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "تعديل مستخدم " })
+@{
+    ViewBag.Title = "User - " + Model.Username;
+    if ((Model.Username != null) && (Model.Username != ""))
+    {
+        ViewBag.Title = ViewBag.Title + " (" + Model.Username + ")";
+    }
+}
+
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+@section scripts{
+<script type="text/javascript">
+    var $ = jQuery;
+    $(document).ready(function () {
+        $(":input[type='button']").button();
+        $(":input[type='submit']").button();
+
+        window.setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () { $(this).remove(); });
+        }, 4000
+        );
+    });
+</script>
+}
+<div class="panel-heading">@Html.Display(Model.Username)تعديل مستخدم </div>
+
+@if (TempData["errorupdate"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["errorupdate"]
+
+
+        </div>
+    </div>
+}
+
+
+@using (Html.BeginForm("UserEdit", "Admin", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+
+
+        @Html.Partial("_userDetailsEdit", Model)
+        <br />
+
+        <div class="row"><div class="col-md-11"><button type="submit" class="btn float-left "><i class="fa fa-save "></i>حفظ</button></div></div>
+    </fieldset>
+}
+<br />
+<fieldset>
+    <legend>إضافة المهام للمستخدم </legend>
+
+    @Html.Partial("_ListEditableUserRoleTable")
+    <div class="panel" id="RolesTable">
+        @Html.Partial("_ListUserRoleTable", Model)
+    </div>
+    <br />
+    <div>
+        @*@Html.ActionLink("Go to Roles", "RoleIndex", "Admin")*@
+    </div>
+</fieldset>
+
+<br />
+<div>
+    @Html.ActionLink("عرض كل المستخدمين", "Index", "Admin")
+</div>

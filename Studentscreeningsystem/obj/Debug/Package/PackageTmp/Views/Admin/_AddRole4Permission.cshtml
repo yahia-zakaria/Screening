@@ -1,0 +1,41 @@
+﻿@model Studentscreeningsystem.Models.PERMISSION
+<script src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#AddPermission').click(function () {
+            var _roleId = $('#RoleId').val();
+            var _permissionId = $('#Permission_Id').val();
+
+
+            if (_permissionId == '') {
+                return false;
+            }
+
+            var _parameters = { permissionId: _permissionId, roleId: _roleId };
+            $.ajax({
+                url: "/Admin/AddRole2PermissionReturnPartialView",
+                type: "GET",
+                data: _parameters,
+                success: function (data, textStatus, jqXHR) {
+                    $('#RolesTable').html(data);
+                    $('#RoleId').val("");
+                }
+            });
+        });
+    });
+</script>
+@Html.HiddenFor(model => model.Permission_Id)
+
+<br />
+<div class="row justify-content-md-center">
+    <div class="input-group mb-3 col-md-11 ">
+        @Html.DropDownList("RoleId", null, string.Empty, new { @class = "form-control", style = "width:350px;height: 42px; border-radius: 0; " })
+
+        <div class="input-group-prepend">
+
+            <button type="button" id="AddPermission" class="btn btn-outline-secondary"><i class="fa fa-plus"></i></button>
+        </div>
+
+    </div>
+
+</div>

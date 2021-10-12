@@ -1,0 +1,302 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.USER>
+@{
+    ViewBag.Title = "إدارة المستخدمين";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض قائمة المستخدمين " })
+<style>
+    .custom-file-input ~ .custom-file-label::after {
+        content: "إختر";
+        left: 0;
+        right: auto;
+        border-left-width: 0;
+        border-right: inherit;
+    }
+</style>
+<script src="~/Scripts/jquery.min.js"></script>
+
+<script>
+    $(function () {
+        $("#pbFilter").click(function () {
+            $.get("/Admin/filter4Users", { _surname: $("#SurnameId").val() }, function (data) {
+                $("#divUsers").html(data);
+
+            })
+        })
+    });
+
+
+
+    $(function () {
+        $("#pbReset").click(function () {
+            $("#SurnameId").val();
+            $.get("/Admin/filterReset", {}, function (data) {
+                $("#divUsers").html(data);
+            })
+        })
+    });
+
+    $(function () {
+        $("#uploadexcel").click(function () {
+            $("#modaluserfileexcel").show();
+        })
+    });
+    $(function () {
+        $("#ClosedModal").click(function () {
+            $("#modaluserfileexcel").hide();
+        })
+    });
+    $(function () {
+        $("#ClosedModalX").click(function () {
+            $("#modaluserfileexcel").hide();
+        })
+    });
+
+    $(document).ready(function () {
+        $(':input[type="button"]').button();
+
+    });
+    window.setTimeout(function () {
+        $(".alertOut").fadeTo(500, 0).slideUp(500, function () { $(this).remove(); });
+    }, 4000
+    );
+
+    $(function () {
+        $('input[type=file]').change(function () {
+            var val = $(this).val().toLowerCase(),
+                regex = new RegExp("(.*?)\.(xlsx|xls)$");
+
+            if (!(regex.test(val))) {
+            $(this).val('');
+            $(this).siblings(".custom-file-label").addClass("selected").html('لا يوجد ملف');
+            $("#validationexcelDegree").html('الرجاء إدخال ملف من نوع إكسل');
+
+        }
+        else {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            $("#validationexcelDegree").html('');
+        }
+        });
+    });
+
+    function save_user_excel() {
+        var _validFileExtensions = [".xlsx"];
+        var isvalid = true;
+
+
+        if ($("#fileexcel").val() == "") {
+            $("#validationexcelDegree").html('هذا الحقل مطلوب, الرجاء إدخال ملف من نوع إيكسل');
+            isvalid = false;
+        } else {
+            $("#validationexcelDegree").html('');
+        }
+        if (isvalid) {
+            $("#modaluserfileexcel").hide();
+            var formData = new FormData();
+            var FileUpload = $("#fileexcel").get(0);
+            var files = FileUpload.files;
+            formData.append("file", files[0]);
+            $.ajax(
+                {
+                    url: '@Url.Action("save_user_excel", "Admin")',
+                    type: 'POST',
+                    async: true,
+
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+
+                    success: function (message) {
+
+
+                    }
+                });
+            location.reload();
+        }
+    }
+</script>
+
+
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="panel-heading">
+    إدارة المستخدمين
+    <a class="btn btn-primary col-md-2 pull-left btn-sm" href="/admin/reset" >إعادة تهيئة النظام</a>
+    </div>
+
+@if (TempData["SuccessInactive"] != null)
+{
+    <div class="alert-messages text-center ">
+        <div class="alert alert-success alert-dismissible fade show alertOut" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["SuccessInactive"]
+
+        </div>
+    </div>
+}
+
+@if (TempData["SuccessActive"] != null )
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show alertOut" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            @TempData["SuccessActive"]
+           
+
+
+        </div>
+    </div>
+}
+
+@if (TempData["SuccessUserDelete"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show alertOut" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["SuccessUserDelete"]
+
+
+        </div>
+    </div>
+}
+@if (TempData["Successactiveuser"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show alertOut" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["Successactiveuser"]
+
+
+        </div>
+    </div>
+}
+@if (TempData["Successadduser"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show alertOut" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["Successadduser"]
+
+
+        </div>
+    </div>
+}
+
+@if (TempData["warninguploadedUserExcel"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            @TempData["warninguploadedUserExcel"]
+
+
+
+        </div>
+    </div>
+}
+
+@if (TempData["SuccessuploadedUserExcel"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show alertOut" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            @TempData["SuccessuploadedUserExcel"]
+
+
+
+        </div>
+    </div>
+}
+
+<br />
+<div class="row">
+    <div class="input-group mb-3 col-md-6">
+        <input type="text" id="SurnameId" name="SurnameId" class="form-control" placeholder="بحث" aria-label="" aria-describedby="basic-addon1" style="border-radius:0;height: auto;">
+
+        <div class="input-group-prepend">
+
+            <button type="button" id="pbFilter" name="pbFilter" class="btn btn-outline-secondary"><i class="fa fa-search "></i></button>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <button type="button" id="pbReset" class="btn float-left "><i class="fa fa-undo"> </i>تحديث البحث</button>
+    </div>
+</div>
+<br />
+@Html.Partial("_ListUserTable", Model)
+<br />
+<div>
+    <button type="button" onclick="location.href='@Url.Action("UserCreate", "Admin")'" class="btn "><i class="fa fa-user-plus "></i>إضافة مستخدم</button>
+    <button type="button" id="uploadexcel" class="btn "><i class="fa fa-file-excel-o"></i>إضافة ملف Excel للمستخدمين  </button>
+    <br />
+</div>
+<br />
+@Html.ActionLink("قائمة المستخدمين غير المفعلين", "Inactive", "Admin")
+
+
+<div class="modal  pageModal" id="modaluserfileexcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">إضافة ملف Excel للمستخدمين</h5>
+                <button type="button" class="close" data-dismiss="modal" id="ClosedModalX" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formfileexcel" enctype="multipart/form-data">
+                <div class="modal-body">
+
+
+                    <div class="form-group ">
+                        <label class="text-info">ملف الإكسل للمستخدمين</label>
+                        <br />
+                        <div class="custom-file " style="width: auto;">
+                            <input type="file" value="Uploadfile" class="custom-file-input form-control " id="fileexcel">
+                            <label class="custom-file-label" for="customFile">لا يوجد ملف</label>
+                        </div>
+                    </div>
+                    <span id="validationexcelDegree" class="field-validation-valid text-danger" data-valmsg-for="excelDegree" data-valmsg-replace="true"></span>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn " onclick="save_user_excel()" style="margin-left: 6px;" id="deletep">حفظ </button>
+                <button type="button" class="btn " id="ClosedModal" data-dismiss="modal"> إلغاء</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+

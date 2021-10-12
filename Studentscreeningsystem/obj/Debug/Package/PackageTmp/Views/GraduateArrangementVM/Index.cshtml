@@ -1,0 +1,158 @@
+﻿@model IEnumerable<Studentscreeningsystem.ViewsModel.GraduateArrangementVM>
+
+@{
+    ViewBag.Title = "قائمة معدلات الخريجين";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض قائمة معدلات الخريجين " })
+<script src="~/Scripts/jquery.min.js"></script>
+<style>
+    .btnlink {
+        padding: 8px 20px;
+        border: 1px solid #00a159;
+        width: auto;
+        color: #fff;
+        background: #00a159;
+    }
+
+        .btnlink:hover {
+            border: 1px solid #00a159;
+        }
+</style>
+
+<div id="loading">
+   
+</div>
+<p class="message">جاري توزيع الخريجين...</p>
+<div class="page">
+
+    <div class="panel-heading">قائمة معدلات الخريجين</div>
+    @if (TempData["SuccesInsortable"] != null)
+    {
+        <div class="alert-messages text-center">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @TempData["SuccesInsortable"]
+
+            </div>
+        </div>
+    }
+    @if (TempData["SuccessResortable"] != null)
+    {
+        <div class="alert-messages text-center">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @TempData["SuccessResortable"]
+
+            </div>
+        </div>
+    }
+
+    <div class="row justify-content-md-center">
+
+        <div class="col-md-12 ">
+
+            @*الجدول*@
+
+            @(Html
+                                .Grid(Model)
+                                .Build(columns =>
+                                {
+                                    columns.Add(model => model.Rank).Titled(" التسلسل");
+                                    columns.Add(model => model.NumGraduate).Titled("الرقم العسكري ").Filterable(true);
+                                    columns.Add(model => model.NameGraduate).Titled("اسم الخريج").Filterable(true);
+                                    columns.Add(model => model.Average).Titled(" المعدل");
+
+
+
+                                //عمليات البرنامج
+                                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "InsortableGraduate", "Admin", new { id = model.IdGraduate }, new { @class = "faicone fa fa-ban", title = "إستبعاد الخريج من الفرز" }));
+                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RaportsGraduate", "alldegreeGraduate", new { id = model.IdGraduate }, new { @class = "faicone fa fa-plus", title = "تفاصيل  الخريج" }));
+                                })
+                                .Empty("لم يتم العثور على متطلبات")
+                                .Css("css-classes") // Overwrites all classes with the new ones
+                                .AppendCss("table-hover")
+                                .Pageable(pager =>
+                                {
+                                    pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 10, "10" }, { 20, "20" }, { 50, "50" }, { 100, "100" } };
+                                    pager.ShowPageSizes = true;
+                                    pager.PagesToDisplay = 3;
+                                    pager.CurrentPage = 1;
+                                    pager.RowsPerPage = 10;
+                                })
+            )
+        </div>
+    </div>
+
+
+    <br />
+    <br />
+
+    <div class="col-md-12 " style="box-sizing: border-box;">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+
+                @Html.ActionLink("توزيع", "SortableGraduate", null, new { @class = "btn btnlink sortable", onclick = "loadpage()" })
+
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    @Html.ActionLink("قائمة الخريجين", "ListGraduate", "Admin")
+
+    <br>
+</div>
+
+<style>
+    .page {
+        display: block;
+        padding: 0 0.5em;
+    }
+    .message {
+        display: none;
+        color:#00a159;
+        position:absolute;
+        top:75%;
+        left:50%;
+        margin:-70px 0 0 -70px;
+    }
+    #loading {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(192, 192, 192, 0.5);
+        background-image: url('../../Content/Images/laoding.gif');
+        background-repeat: no-repeat;
+        background-position: center;
+        color: #00a159;
+    }
+</style>
+
+
+<script>
+
+
+    function loadpage() {
+        $('#loading').show();
+        $('.message').show();
+        $('.page').hide();
+        $('.topheader').hide();
+        $('.logo').hide();
+        $('.navbar').hide();
+        $('.MyFooter').hide();
+    }
+
+</script>

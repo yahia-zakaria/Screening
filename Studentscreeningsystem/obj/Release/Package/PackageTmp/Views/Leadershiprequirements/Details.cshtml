@@ -1,0 +1,36 @@
+﻿@model Studentscreeningsystem.Models.Leadershiprequirement
+
+@{
+    ViewBag.Title = "تعديل متطلب قياسي";
+}
+
+
+<div class="panel-heading">تعديل متطلب قياسي</div>
+
+<div class="col-md-12">
+    <div class="form-group">
+        @Html.LabelFor(model => model.NameLeadership, "المتطلب", htmlAttributes: new { @class = "text-info" })
+        @Html.EditorFor(model => model.NameLeadership, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.NameLeadership, "", new { @class = "text-danger" })
+    </div>
+    
+
+</div>
+<br />
+
+
+<div class="col-md-12">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value=" تعديل" class="btn btn-lg btncreate addbutton" />
+        </div>
+    </div>
+</div>
+
+
+
+<div>
+    @Html.ActionLink("الرجوع إلى القائمة السابقة", "Index")</br>
+
+    @Html.ActionLink("تعديل", "Edit", new { id = Model.IdLeadership }) |
+</div>

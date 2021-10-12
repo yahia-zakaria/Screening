@@ -1,0 +1,105 @@
+﻿@model Studentscreeningsystem.Models.USER
+@{if (Model != null)
+  {    
+    
+<div id="expanderContent">
+
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="text-info">رقم الهوية:</span>
+
+                </div>
+                <div class="col-md-6">
+                    @Model.Username
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="text-info">الرقم العسكري:</span>
+
+                </div>
+                <div class="col-md-6">
+                    @Model.Passeword
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="text-info">الإسم:</span>
+
+                </div>
+                <div class="col-md-6">
+                    @Model.Firstname
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="text-info">اللقب: </span>
+
+                </div>
+                <div class="col-md-6">
+                    @Model.Lastname
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="text-info">المسمى الوظيفي:</span>
+
+                </div>
+                <div class="col-md-6">
+                    @Model.Title
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="text-info">مفعل: </span>
+
+                </div>
+                <div class="col-md-6">
+
+                    @{var Inactive = @Model.Inactive;}
+                    @if (Inactive.Equals(false))
+                    {
+                        <p>
+
+                            نعم
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            لا
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+  }
+}

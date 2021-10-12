@@ -1,0 +1,35 @@
+﻿@model Studentscreeningsystem.Models.Sector
+
+@{
+    ViewBag.Title = "حذف سلاح";
+}
+
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="card">
+    <div class="card-header">
+        هل أنت متأكد من حذف هذا السلاح؟
+    </div>
+    <div class="card-body">
+        <h5 class="card-title"> @Html.DisplayFor(model => model.NameSector)</h5>
+        <p class="card-text"> @Html.ActionLink(" متطلبات السلاح", "RaportsSector", "RequirementSectorVM", new { @id = Model.IdSector }, null) </p>
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn "><i class="fa fa-trash"></i> حذف</button>
+
+            @Html.ActionLink("إلغاء", "Index", null, new { @class = "btn btnlink  fa fa-close" })
+
+
+        }
+    </div>
+
+</div>
+
+<div>
+
+    @Html.ActionLink("الرجوع إلى القائمة السابقة", "Index")
+</div>

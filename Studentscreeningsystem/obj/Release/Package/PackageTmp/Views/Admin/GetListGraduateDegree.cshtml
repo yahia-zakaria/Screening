@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.USER>
+@Html.Action("Create", "MouvementUsers", new {userid = Session["User_Id"], link = "عرض قائمة الخريجين الذين تم إدخال درجاتهم"})
+@{
+    ViewBag.Title = "قائمة الخريجين الذين تم إدخال درجاتهم";
+}
+
+<div class="panel-heading">قائمة الخريجين الذين تم إدخال درجاتهم</div>
+
+
+<div class="row justify-content-md-center" style="font-family: Cairo;">
+    <div class="col-md-12 ">
+        <table id="DataTable" class="table table-responsive">
+            <thead>
+            <tr>
+                <th>السجل المدني</th>
+                <th>الرقم العسكري</th>
+                <th>الإسم</th>
+                <th>الرياضيات</th>
+                <th>السلوك</th>
+                <th>المواضبة</th>
+                <th>المظلات</th>
+                <th>الصاعقة</th>
+                <th>المعدل التراكمي</th>
+                <th>التفاصيل</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Passeword</td>
+                    <td>@user.Firstname @user.Lastname</td>
+                    @if (user.RapportGraduate != null)
+                    {
+                        <td>@user.RapportGraduate.degreeMatrial[0].percentage</td>
+                        <td>@user.RapportGraduate.degreesupplement[0].percentage</td>
+                        <td>@user.RapportGraduate.degreesupplement[1].percentage</td>
+                        <td>@((user.RapportGraduate.LeadershipVM[0].IsChecked) ? "نعم" : "لا")</td>
+                        <td>@((user.RapportGraduate.LeadershipVM[1].IsChecked) ? "نعم" : "لا")</td>
+                        <td>@user.RapportGraduate.AverageGraduate</td>
+                    }
+                    <td>
+                        <div class="btn-group">
+                            <a href="/alldegreeGraduate/EditGraduate?id=@user.User_Id" class="btn btn-success btn-sm" style="margin-left: 2px">تعديل </a>
+                            <a href="/alldegreeGraduate/RaportsGraduate?id=@user.User_Id" class="btn btn-info btn-sm">الدرجات</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        @section Scripts{
+            <script>
+                $(document).ready(function() {
+                    var table = $("#DataTable").DataTable({
+                        "language": {
+                            "search": "البحث :",
+                            "sLengthMenu": "الصفحات : _MENU_ ",
+                            "paginate": {
+                                "previous": "السابق",
+                                "next": "التالي"
+                            },
+                            "info": "الصفحة _START_ من _END_ المجموع : _TOTAL_ ",
+                            "infoEmpty": "لا يوجد عرض",
+                        }
+                    });
+                });
+
+
+            </script>
+        }
+
+    </div>
+</div>
+<br/>
+<br/>
+@Html.ActionLink("قائمة الخريجين", "ListGraduate", "Admin")
+<br/>
+
+<br>

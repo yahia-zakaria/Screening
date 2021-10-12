@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.USER>
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض الخريجين المستبعدين من عملية الفرز " })
+@{
+    ViewBag.Title = "الخريجين المستبعدين من عملية التوزيع";
+}
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+<div class="panel-heading">قائمة الخريجين المستبعدين من عملية التوزيع</div>
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-12 ">
+        @(Html
+                                    .Grid(Model)
+                                    .Build(columns =>
+                                    {
+                                        columns.Add(model => model.Username).Titled("رقم الهوية").Filterable(true);
+                                        columns.Add(model => model.Passeword).Titled("الرقم العسكرى").Filterable(true);
+                                        columns.Add(model => model.Firstname).Titled("الإسم").Filterable(true);
+                                        columns.Add(model => model.Lastname).Titled("اللقب").Filterable(true);
+                                        columns.Add(model => model.Sector.NameSector).Titled("السلاح الموجه له").Filterable(true);
+                                        columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "ResortableGraduate", "Admin", new { id = model.User_Id }, new { @class = "faicone fa fa-reply-all", title = "تفعيل الفرر" }));
+
+
+                                        columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "", "", new { }, new { @class = "faicone fa fa-filter Sortablebtn", title = "توزيع الخريج", onclick = "Sortable('" + model.User_Id + "')" }));
+
+
+
+                                    })
+                                    .Empty("لا يوجد خريجين مستبعدين من عملية التوزيع")
+                                    .Id("my-ajax-grid")
+                                    .Css("css-classes") // Overwrites all classes with the new ones
+                                    .AppendCss("table-hover")
+                                    .Pageable(pager =>
+                                    {
+                                        pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 10, "10" }, { 20, "20" }, { 50, "50" }, { 100, "100" } };
+                                        pager.ShowPageSizes = true;
+                                        pager.PagesToDisplay = 3;
+                                        pager.CurrentPage = 1;
+                                        pager.RowsPerPage = 5;
+                                    })
+
+                                    .Filterable()
+
+        )
+
+    </div>
+</div>
+
+<!-- SortableModal -->
+<div class="modal fade" id="SortableModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">توزيع الخريج</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.DropDownList("IdSector", (IEnumerable<SelectListItem>)ViewBag.sector, null, new { @class = "form-control" })
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="SortableG" class="btn " style="margin-left: 6px;">حفظ</button>
+                <button type="button" class="btn " data-dismiss="modal" >إلغاء</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            //    //Unbind the original image 'href' set by the controller...
+            $('.Sortablebtn').attr('href', 'javascript://');
+
+
+        });
+        function Sortable(id) {
+
+            $('#SortableModal').modal('show');
+
+            $('#SortableG').click(function () {
+                var parametres = { id: id, IdSector: $('#IdSector').val() }
+
+                $.ajax({
+                    url: "/Admin/SortableG",
+                    method: "POST",
+                    data: parametres,
+                    success: function () {
+
+                        location.reload();
+
+                    },
+                    error: function (data) {
+                        alert("error" + data);
+                    }
+
+                });
+            });
+
+
+        }
+    </script>
+}

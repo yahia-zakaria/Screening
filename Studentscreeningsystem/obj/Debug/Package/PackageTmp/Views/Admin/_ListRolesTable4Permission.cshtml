@@ -1,0 +1,95 @@
+﻿@model Studentscreeningsystem.Models.PERMISSION
+<script src="~/Scripts/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        //    //Unbind the original image 'href' set by the controller...
+        $('.deletePermission').attr('href', 'javascript://');
+
+
+    });
+    function Edit(_id, _permissionId) {
+        var _parameters = { id: _id, permissionId: _permissionId };
+        $('#exampleModal').modal('show')
+        $('#deletep').click(function () {
+
+            $.ajax({
+                url: "/Admin/DeleteRoleFromPermissionReturnPartialView",
+                type: "GET",
+                data: _parameters,
+                success: function (data, textStatus, jqXHR) {
+                    $('#RolesTable').html(data);
+                    if (textStatus != 200) { //Forbidden, go to login
+                        //Use a reload, WIF will redirect to Login
+                        location.reload(true);
+                    }
+                }
+            });
+
+            $('body').removeClass('modal-open')
+            $('.modal-backdrop').remove()
+        });
+    }
+</script>
+
+<div class="modal fade pageModal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                هل أنت متأكد من حذف هذه المهمة؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn " data-dismiss="modal" style="margin-left: 6px;"> إلغاء</button>
+                <button type="button" class="btn " id="deletep">حذف </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@{if (Model.ROLES.Count == 0)
+    {
+        <h2><font color="red">هذه الصلاحية لا تنتمي الى أي مهمة</font></h2>
+        <br />
+    }
+    else
+    {
+        <div class="row justify-content-md-center" id="RolesTable">
+            <div class="col-md-11 ">
+                @(Html
+                                                .Grid(Model.ROLES)
+                                                .Build(columns =>
+                                                {
+                                                    columns.Add(model => model.RoleName).Titled("المهمة").Filterable(true);
+                                                    columns.Add(model => model.RoleDescription).Titled("الوصف").Filterable(true);
+
+                                                    //عمليات البرنامج
+                                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "", "", new { }, new { @class = "faicone fa fa-trash-o  deletePermission" , onclick = "Edit('" + model.Role_Id + "','" + Model.Permission_Id + "')" }));
+                                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RoleEdit", "Admin", new { id = model.Role_Id }, new { @class = "faicone fa fa-edit" }));
+                                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RoleDetails", new { id = model.Role_Id }, new { @class = "faicone fa fa-plus" }));
+                                                })
+                                                    .Empty("لم يتم العثور على مهام")
+                                                        .Css("css-classes") // Overwrites all classes with the new ones
+                                                        .AppendCss("table-hover")
+                                                    .Pageable(pager =>
+                                                    {
+                                                        pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 5, "5" }, { 10, "10" } };
+                                                        pager.ShowPageSizes = true;
+                                                        pager.PagesToDisplay = 3;
+                                                        pager.CurrentPage = 1;
+                                                        pager.RowsPerPage = 5;
+                                                    })
+                )
+            </div>
+
+        </div>
+
+
+        <br />
+    }}

@@ -1,0 +1,116 @@
+﻿@model Studentscreeningsystem.Models.USER
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "إضافة مستخدم" })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='submit']").button();
+    })
+</script>
+<style>
+    ul > li {
+        list-style-type: none;
+    }
+</style>
+@Html.Raw(ViewBag.scripts)
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+
+<div class="panel-heading">إضافة مستخدم</div>
+<div class="panel">
+    @using (Html.BeginForm("UserCreate", "Admin", FormMethod.Post))
+    {
+        if (ViewData.ModelState[""] != null && ViewData.ModelState[""].Errors.Any())
+        {
+            <div class="alert-messages text-center">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    @Html.ValidationSummary(true)
+
+                </div>
+            </div>
+
+        }
+        <fieldset>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Username, "رقم الهوية", htmlAttributes: new { @class = "control-label col-md-5 text-info" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Username, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Firstname, "الإسم", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Firstname, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Lastname, "اللقب", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Lastname, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Passeword, "الرقم العسكري", htmlAttributes: new { @class = "control-label col-md-8 text-info" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Passeword, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.Passeword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Comfirmepasseword, "إعادة إدخال الرقم العسكري", htmlAttributes: new { @class = "control-label col-md-8 text-info" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Comfirmepasseword, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.Comfirmepasseword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Title, "المسمى الوظيفي", htmlAttributes: new { @class = "control-label col-md-8 text-info" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.Title,  new List<SelectListItem>
+                                { new SelectListItem{Text="خريج", Value="خريج"},
+                                new SelectListItem{Text="إداري", Value="إداري"}}, "إختر المسمى الوظيفي ", htmlAttributes: new { @class = "form-control" } )
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <br />
+
+            <div class="row"><div class="col-md-11"><button type="submit" class="btn float-left "><i class="fa fa-save "></i>حفظ</button></div></div>
+        </fieldset>
+    }
+</div>
+<div>
+    @Html.ActionLink("عرض قائمة المستخدمين", "Index", "Admin")
+</div>

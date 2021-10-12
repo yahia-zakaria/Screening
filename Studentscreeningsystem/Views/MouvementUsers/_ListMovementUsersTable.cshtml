@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.MouvementUsers>
+<div class="panel" id="divMouvement">
+    @(Html
+
+                .Grid(Model)
+                .Build(columns =>
+                {
+                    columns.Add(model => model.USER.Username).Titled("رقم الهوية").Filterable(true);
+                    columns.Add(model => model.USER.Passeword).Titled("الرقم العسكري").Filterable(true);
+                    columns.Add(model => model.USER.Firstname).Titled("الإسم");
+                    columns.Add(model => model.USER.Lastname).Titled("اللقب");
+
+                    columns.Add(model => model.Link).Titled("سجل المستخدمين").Filterable(true);
+                    columns.Add(model => model.DateMouvement).Titled("التاريخ");
+                })
+                                .Empty("لم يتم العثور على صفحات مدخلة في السجل")
+                                    .Css("css-classes") // Overwrites all classes with the new ones
+                                    .AppendCss("table-hover")
+                                .Pageable(pager =>
+                                {
+                                    pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 10, "10" }, { 50, "50" }, { 100, "100" } };
+                                    pager.ShowPageSizes = true;
+                                    pager.PagesToDisplay = 3;
+                                    pager.CurrentPage = 1;
+                                    pager.RowsPerPage = 5;
+                                })
+)
+</div>

@@ -1,0 +1,400 @@
+﻿@model Studentscreeningsystem.ViewsModel.GeneralReportGraduateVM
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@{
+    ViewBag.Title = "جدول التقييم العام لخريج";
+}
+
+<div class="panel-heading">جدول التقييم العام لخريج </div>
+
+<div class="panel panel-default" style="border: 1px solid #00a159;     padding: 20px 30px; ">
+    <div class="panel-body" style="font-family: Cairo;">
+        <div class="form-group row">
+
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-info">رقم الهوية:</span>
+
+                    </div>
+                    <div class="col-md-6">
+                        @Model.IdentityGraduate
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-info">الرقم العسكري:</span>
+
+                    </div>
+                    <div class="col-md-6">
+                        @Model.NumGraduate
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="text-info">اسم الخريج:</span>
+
+                    </div>
+                    <div class="col-md-6">
+                        @Model.NameGraduate
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<br />
+
+
+
+@*tableau synthese*@
+<style>
+    tr {
+        border: solid 1px #ddd
+    }
+
+    td, th {
+        border-right: solid 1px #ddd;
+        vertical-align: bottom;
+        text-align: center;
+    }
+
+        th.rotate {
+            /* Something you can count on */
+            height: 150px;
+            white-space: nowrap;
+        }
+
+            th.rotate > div {
+                transform:
+                /* Magic Numbers */
+                translate(0px, -114px)
+                /* 45 is really 360 - 45 */
+                rotate(269deg);
+                width: 30px;
+            }
+
+                th.rotate > div > span {
+                    padding: 5px 10px;
+                }
+
+    .category {
+        padding: 6px;
+        background-color: #b2bec4;
+        border-bottom: 5px solid #00a159;
+        color: #29504d;
+        font-weight: bold;
+    }
+
+    .ligne:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .ligne:hover {
+        background-color: #4888C2;
+    }
+
+    .pg {
+        background-color: #00a159;
+    }
+
+    .mysector {
+        background-color: coral;
+        color: white;
+    }
+
+    .sector {
+        color: #00a159;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script>
+    function getParamByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    $(document).ready(function () {
+        var cl = getParamByName('idWhishe');
+        var elements = document.getElementsByClassName(cl);
+        for (var i = 0; i < elements.length; i++)
+        { elements[i].style.background = "rgba(154, 186, 212, 0.38)"; }
+    });
+</script>
+
+<table style="border:solid 1px black;width: 100%;">
+    @{var nbwishes = Model.WishesList.Count;
+        var col = nbwishes * 2;
+        var colcategorie = col + 2;
+        var colavreage = col + 1;}
+    <thead>
+        <tr>
+            <th rowspan="3">المتطلبات</th>
+            <th rowspan="3" class="rotate pg"><div><span>درجة الطالب</span></div></th>
+            <th class="category" colspan="@col">ترتيب الرغبات</th>
+        </tr>
+        @if (nbwishes != 0)
+        {
+
+            <tr>
+
+                @foreach (var item in Model.WishesList)
+                {
+
+                    <th class="@item.IdWishes sector" >@item.NameWishes</th>
+
+                }
+
+
+            </tr>
+            <tr>
+                @foreach (var item in Model.WishesList)
+                {
+                    @*<th class="rotate @item.IdWishes"><div><span>الأولوية</span></div></th>*@
+                    <th class="rotate @item.IdWishes"><div><span>الدرجة المطلوبة</span></div></th>
+
+                }
+
+
+            </tr>
+        }
+    </thead>
+
+    <tbody>
+        @if (Model.MaterialList.Count != 0)
+        {
+            <tr>
+                <td class="category" colspan="@colcategorie">المواد الدراسية</td>
+            </tr>
+
+            var newList = Model.MaterialList.GroupBy(x => new { x.NameRequirement, x.PercentageGraduate })
+                                            .Select(y => new
+                                            {
+                                                NameRequirement = y.Key.NameRequirement,
+                                                PercentageGraduate = y.Key.PercentageGraduate,
+
+                                                Children = y.ToList().GroupBy(g => g.IdSector)
+                                            }
+                                            );
+
+            foreach (var item in newList)
+            {
+                <tr class="ligne">
+                    <td>@item.NameRequirement</td>
+                    <td class="pg">@item.PercentageGraduate</td>
+                    @foreach (var sousitem in item.Children)
+                    {
+                        foreach (var i in sousitem)
+                        {
+                            @*<td class="@i.IdSector">@i.Priority</td>*@
+                            <td class="@i.IdSector">@i.PercentageSector</td>
+                        }
+                    }
+                </tr>
+            }
+
+        }
+
+
+        @if (Model.FitnessList.Count != 0)
+        {
+            <tr>
+                <td class="category" colspan="@colcategorie">المتطلبات البدنية</td>
+            </tr>
+
+            var newList = Model.FitnessList.GroupBy(x => new { x.NameRequirement, x.PercentageGraduate })
+                                            .Select(y => new
+                                            {
+                                                NameRequirement = y.Key.NameRequirement,
+                                                PercentageGraduate = y.Key.PercentageGraduate,
+
+                                                Children = y.ToList().GroupBy(g => g.IdSector)
+                                            }
+                                            );
+
+            foreach (var item in newList)
+            {
+                <tr class="ligne">
+                    <td>@item.NameRequirement</td>
+                    <td class="pg">@item.PercentageGraduate</td>
+                    @foreach (var sousitem in item.Children)
+                    {
+                        foreach (var i in sousitem)
+                        {
+                            @*<td class="@i.IdSector">@i.Priority</td>*@
+                            <td class="@i.IdSector">@i.PercentageSector</td>
+                        }
+                    }
+                </tr>
+            }
+
+        }
+
+        @if (Model.MeasureList.Count != 0)
+        {
+            <tr>
+                <td class="category" colspan="@colcategorie">المتطلبات  القياسية</td>
+            </tr>
+
+            var newList = Model.MeasureList.GroupBy(x => new { x.NameRequirement, x.PercentageGraduate })
+                                            .Select(y => new
+                                            {
+                                                NameRequirement = y.Key.NameRequirement,
+                                                PercentageGraduate = y.Key.PercentageGraduate,
+
+                                                Children = y.ToList().GroupBy(g => g.IdSector)
+                                            }
+                                            );
+
+            foreach (var item in newList)
+            {
+                <tr class="ligne">
+                    <td>@item.NameRequirement</td>
+                    <td class="pg">@item.PercentageGraduate</td>
+                    @foreach (var sousitem in item.Children)
+                    {
+                        foreach (var i in sousitem)
+                        {
+                            @*<td class="@i.IdSector">@i.Priority</td>*@
+                            <td class="@i.IdSector">@i.PercentageSector</td>
+                        }
+                    }
+                </tr>
+            }
+
+        }
+
+        @if (Model.BehaviorList.Count != 0)
+        {
+            <tr>
+                <td class="category" colspan="@colcategorie">السلوك و المواظبة</td>
+            </tr>
+
+            var newList = Model.BehaviorList.GroupBy(x => new { x.NameRequirement, x.PercentageGraduate })
+                                            .Select(y => new
+                                            {
+                                                NameRequirement = y.Key.NameRequirement,
+                                                PercentageGraduate = y.Key.PercentageGraduate,
+
+                                                Children = y.ToList().GroupBy(g => g.IdSector)
+                                            }
+                                            );
+
+            foreach (var item in newList)
+            {
+                <tr class="ligne">
+                    <td>@item.NameRequirement</td>
+                    <td class="pg">@item.PercentageGraduate</td>
+
+                    @foreach (var sousitem in item.Children)
+                    {
+                        foreach (var i in sousitem)
+                        {
+                            @*<td class="@i.IdSector">@i.Priority</td>*@
+                            <td class="@i.IdSector">@i.PercentageSector</td>
+                        }
+                    }
+                </tr>
+            }
+
+        }
+
+        @if (Model.LeadershipList.Count != 0)
+        {
+            <tr>
+                <td class="category" colspan="@colcategorie">المتطلبات القيادية</td>
+            </tr>
+
+                        var newList = Model.LeadershipList.GroupBy(x => new { x.NameLeadership, x.IsCheckedGraduate })
+                                                        .Select(y => new
+                                                        {
+                                                            NameLeadership = y.Key.NameLeadership,
+                                                            IsCheckedGraduate = y.Key.IsCheckedGraduate,
+
+                                                            Children = y.ToList().GroupBy(g => g.IdSector)
+                                                        }
+                                                        );
+                        var countleadership = newList.Count();
+                        foreach (var item in newList)
+                        {
+            <tr class="ligne">
+                <td>@item.NameLeadership</td>
+                <td class="pg">
+                    @if (item.IsCheckedGraduate == false)
+                    {<span>لا </span>}
+                    else
+                    {<span>نعم </span>}
+                </td>
+                @{
+                    var sectorleadership = false;
+                }
+                @foreach (var sector in Model.WishesList)
+                {
+                 
+                    foreach (var sousitem in item.Children)
+                    {
+
+                        if (sousitem.Key == sector.IdWishes)
+                        {
+                            foreach (var i in sousitem)
+                            {
+                                <td class="@i.IdSector">
+                                    @if (i.IsCheckedSector == false)
+                                    {<span>لا </span>}
+                                    else
+                                    {<span>نعم </span>}
+
+                                </td>
+
+                            }
+                            sectorleadership = false;
+                            break;
+                        }
+                        else { sectorleadership = true; }
+
+                    }
+                    if (sectorleadership)
+                    {
+
+                            <td class="@sector.IdWishes"></td>
+
+                       
+                        sectorleadership = false;
+                    }
+
+
+                }
+            </tr>
+            }
+
+        }
+
+
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>المعدل التراكمي</th>
+            <th colspan="@colavreage">@Model.AverageGraduate</th>
+        </tr>
+    </tfoot>
+</table>

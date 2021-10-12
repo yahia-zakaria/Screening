@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.USER>
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض قائمة  الخريجين الذين لم  يتم إدخال درجاتهم" })
+@{
+    ViewBag.Title = "قائمة الخريجين الذين لم  يتم إدخال درجاتهم";
+}
+
+<div class="panel-heading">قائمة الخريجين الذين  لم  يتم إدخال درجاتهم</div>
+
+<div class="row justify-content-md-center" style="font-family: Cairo;">
+    <div class="col-md-12 ">
+
+        @(Html
+                                            .Grid(Model)
+                                            .Build(columns =>
+                                            {
+                                                columns.Add(model => model.Username).Titled("رقم الهوية").Filterable(true);
+                                                columns.Add(model => model.Passeword).Titled("الرقم العسكرى").Filterable(true);
+                                                columns.Add(model => model.Firstname).Titled("الإسم").Filterable(true);
+                                                columns.Add(model => model.Lastname).Titled("اللقب").Filterable(true);
+
+
+                                        //عمليات البرنامج
+
+                                        if (ViewContext.Controller.HasPermissionUser("alldegreeGraduate-Create"))
+                                                {
+                                                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Create", "alldegreeGraduate", new { id = model.User_Id }, new { @class = "faicone fa fa-save", title = "تسجيل درجات الخريج" }));
+                                                }
+
+
+                                            })
+                                            .Empty("لا يوجد خريجين لم يتم إدخال درجاتهم")
+                                            .Id("my-ajax-grid")
+                                            .Css("css-classes") // Overwrites all classes with the new ones
+                                            .AppendCss("table-hover")
+                                            .Pageable(pager =>
+                                            {
+                                                pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 10, "10" }, { 20, "20" }, { 100, "100" } };
+                                                pager.ShowPageSizes = true;
+                                                pager.PagesToDisplay = 3;
+                                                pager.CurrentPage = 1;
+                                                pager.RowsPerPage = 5;
+                                            })
+
+
+        )
+
+
+
+    </div>
+</div>
+<br />
+
+@Html.ActionLink("قائمة الخريجين", "ListGraduate", "Admin")<br />
+
+<br>

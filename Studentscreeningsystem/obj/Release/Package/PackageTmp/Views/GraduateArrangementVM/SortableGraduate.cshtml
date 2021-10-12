@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Studentscreeningsystem.ViewsModel.SortableGraduateVM>
+@{
+    ViewBag.Title = "قائمة توجيه الخريجين بعد عملية الفرز";
+}
+<script src="~/Scripts/jquery-3.0.0.js"></script>
+
+<div class="panel-heading">قائمة الخريجين بعد التوزيع</div>
+
+
+<div class="row justify-content-md-center">
+
+    <div class="col-md-12 ">
+        @using (Html.BeginForm("ExportToExcel", "GraduateArrangementVM", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-12 ">
+                    <input type="submit" value="" class="buttonexcel float-md-left" />
+
+                </div>
+            </div>
+        }
+
+        @*الجدول*@
+
+        @(Html
+                                    .Grid(Model)
+                                    .Build(columns =>
+                                    {
+                                        columns.Add(model => model.Rank).Titled(" التسلسل").Filterable(true);
+                                        columns.Add(model => model.NumGraduate).Titled("الرقم العسكري ").Filterable(true);
+                                        columns.Add(model => model.NameGraduate).Titled("اسم الخريج").Filterable(true);
+                                        columns.Add(model => model.Average).Titled(" المعدل");
+                                        columns.Add(model => model.NameSector).Titled(" السلاح الموجه له").Filterable(true);
+
+
+
+                                        columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Index", "GeneralReportGraduateVM", new { id = model.IdGraduate, idWhishe = model.IdSector }, new { @class = "faicone fa fa-plus", title = "تفاصيل  الخريج", Target = "_blank" }));
+                                    })
+                                    .Empty("لم يتم العثور على خريجين")
+                                    .Css("css-classes") // Overwrites all classes with the new ones
+                                    .AppendCss("table-hover")
+                                    .Pageable(pager =>
+                                    {
+                                        pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 10, "10" }, { 20, "20" }, { 50, "50" }, { 100, "100" } };
+                                        pager.ShowPageSizes = true;
+                                        pager.PagesToDisplay = 3;
+                                        pager.CurrentPage = 1;
+                                        pager.RowsPerPage = 5;
+                                    })
+        )
+    </div>
+</div>
+
+
+<br />
+
+@Html.ActionLink("قائمة معدلات الخريجين", "Index", "GraduateArrangementVM")
+

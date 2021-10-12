@@ -1,0 +1,234 @@
+﻿@model Studentscreeningsystem.ViewsModel.RapportSectorVM
+
+@{
+    /**/
+
+    ViewBag.Title = "تقرير تفاصيل السلاح";
+}
+
+@if (TempData["UpdateSectorsuccess"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["UpdateSectorsuccess"]
+
+        </div>
+    </div>
+}
+
+
+@if (@Model != null)
+{
+
+
+
+    <div class="panel-heading">تقرير سلاح @Html.DisplayFor(model => model.NameSector)</div>
+
+    <div class="panel panel-default" style="border: 1px solid #00a159;     padding: 20px 30px; ">
+        <div class="panel-body" style="font-family: Cairo;">
+            <div class="row">
+                <div class="col-md-3"><img src="@Url.Content("~/SectorsLogo/" + @Model.LogoPath)" alt="@Model.NameSector" width="135" height="127"></div>
+                <div class="col-md-9"> <h2 class="titlesector"> سلاح:  @Model.NameSector</h2></div>
+            </div>
+
+        </div>
+    </div>
+    <br />
+    if (@Model.RequirementMatrial.Count > 0)
+    {
+        <fieldset class="col-md-12">
+            <legend>المتطلبات الأكاديمية</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="Grid col4">
+                            <span><strong>اسم المادة</strong></span>
+                            <span><strong>النسبة</strong></span>
+                           
+                            <span><strong>اسم المادة</strong></span>
+                            <span><strong>النسبة</strong></span>
+                            
+
+
+                            @foreach (var item in Model.RequirementMatrial)
+                            {
+
+                                <span>@item.NameRequirement</span>
+                                <span>@item.percentage</span>
+                                
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+    }
+    @*/*************المتطلبات البدنية***********/*@
+    if (@Model.RequirementFitness.Count > 0)
+    {
+        <fieldset class="col-md-12">
+            <legend>المتطلبات البدنية</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="Grid col4">
+                            <span><strong>#</strong></span>
+                            <span><strong>النسبة</strong></span>
+                           
+                            <span><strong>#</strong></span>
+                            <span><strong>النسبة</strong></span>
+                           
+
+                            @foreach (var item in Model.RequirementFitness)
+                            {
+
+                                <span>@item.NameRequirement</span>
+                                <span>@item.percentage</span>
+                                
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+    }
+    @*/*************الطول/ الوزن***********/*@
+    <fieldset class="col-md-12">
+        <legend>الطول/ الوزن</legend>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="Grid col3">
+                            <span><strong>#</strong></span>
+                            <span><strong>لا يزيد عن</strong></span>
+                            <span><strong>لا يقل عن</strong></span>
+                            <span><strong>الطول</strong></span>
+                            <span>@Model.Maxlenght</span>
+                            <span>@Model.Minlenght</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="Grid col3">
+                            <span><strong>#</strong></span>
+                            <span><strong>لا يزيد عن</strong></span>
+                            <span><strong>لا يقل عن</strong></span>
+                            <span><strong>الوزن</strong></span>
+                            <span>@Model.Maxweight</span>
+                            <span>@Model.Minweight</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+    @*/*************النسبة الأجمالية لإختبار قياس عسكري***********/*@
+    if (@Model.RequirementMesure.Count > 0)
+    {
+        <fieldset class="col-md-12">
+            <legend>النسبة الأجمالية لإختبار قياس عسكري</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="Grid col4">
+                            <span><strong>#</strong></span>
+                            <span><strong>النسبة</strong></span>
+                            
+                            <span><strong>#</strong></span>
+                            <span><strong>النسبة</strong></span>
+                            
+
+                            @foreach (var item in Model.RequirementMesure)
+                            {
+
+                                <span>@item.NameRequirement</span>
+                                <span>@item.percentage</span>
+                               
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+    }
+    @*/*************متطلبات قيادية***********/*@
+
+    if (@Model.RequirementLeadershipVM.Count > 0)
+    {
+        <fieldset class="col-md-12">
+            <legend>متطلبات قيادية</legend>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+
+
+
+                        @foreach (var item in Model.RequirementLeadershipVM)
+                        {
+
+                            <div class="col-md-6 ">
+                                <dl class="row" style="margin-right: 0px;">
+                                    <dt>@item.NameLeadership :</dt>
+                                    <dd>
+                                        @if (item.IsChecked == true)
+                                        {
+                                            <span>نعم</span>
+                                        }
+                                        else
+                                        {
+                                            <span>لا</span>
+                                        }
+                                    </dd>
+                                </dl>
+
+                            </div>
+                        }
+
+
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    }
+
+    @*/*************إحتياج السلاح***********/*@
+    <br />
+    <fieldset class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-md-5">إحتياج السلاح:</dt>
+                            <dd class="col-md-5">@Model.NbGraduates</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <br />
+
+    @Html.ActionLink("الرجوع إلى قائمة الأسلحة", "Index", "Sectors")
+
+}

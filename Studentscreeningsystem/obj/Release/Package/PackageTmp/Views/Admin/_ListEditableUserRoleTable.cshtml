@@ -1,0 +1,44 @@
+﻿<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='button']").button();
+        $('#AddRole').click(function () {
+            var _userId = $('#UserId').val();
+            var _id = $('#RoleId').val();
+
+            if (_userId == '') {
+                return false;
+            }
+
+            var _parameters = { userId: _userId, id: _id };
+            $.ajax({
+                url: "/Admin/AddUserRoleReturnPartialView",
+                type: "GET",
+                data: _parameters,
+                success: function (data, textStatus, jqXHR) {
+                    $('#RolesTable').html(data);
+                }
+            });
+        });
+    });
+</script>
+@if (ViewContext.Controller.HasPermissionUser("Admin-AddUserRoleReturnPartialView"))
+{
+    <input name='UserId' id='UserId' type="hidden" value="@ViewBag.UserId" />
+
+
+    <br />
+    <div class="row justify-content-md-center">
+        <div class="input-group mb-3 col-md-9 ">
+
+            @Html.DropDownList("RoleId", null, string.Empty, new { @class = "form-control" })
+            <div class="input-group-prepend">
+
+                <button type="button" id="AddRole" name="pbFilter" class="btn btn-outline-secondary"><i class="fa fa-plus"></i></button>
+            </div>
+
+        </div>
+
+    </div>
+}

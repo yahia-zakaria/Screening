@@ -1,0 +1,43 @@
+﻿span {
+    margin-left: 2%;
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #b2bec4;
+    border-bottom: 6px solid #00a159;
+    color: #29504d;
+}
+
+/* Style buttons */
+.btn {
+    background-color: #00a159; /* Blue background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: white;
+        border: 1px solid #00a159;
+        color: #00a159;
+    }
+
+.fa {
+    width: auto
+}
+
+    .fa:hover {
+        border: none
+    }
+
+.btnlink {
+    padding: 12px
+}
+
+    .btnlink:hover {
+        border: 1px solid #00a159;
+    }

@@ -1,0 +1,46 @@
+﻿@model Studentscreeningsystem.Models.Requirement
+
+@{
+    ViewBag.Title = "إضافة متطلب"; 
+ }
+
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="panel-heading">إضافة متطلب </div>
+
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.LabelFor(model => model.NameRequirement, "متطلب سلاح", htmlAttributes: new { @class = "text-info" })
+            @Html.EditorFor(model => model.NameRequirement, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NameRequirement, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Categorie, "نوع المتطلب", htmlAttributes: new { @class = "text-info" })
+            @Html.EnumDropDownListFor(model => model.Categorie, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Categorie, "", new { @class = "text-danger" })
+        </div>
+
+    </div>
+    <br />
+    <div class="col-md-12">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn  "><i class="fa fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        @Html.ActionLink("قائمة متطلبات السلاح وتصنيفهم", "Index")
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

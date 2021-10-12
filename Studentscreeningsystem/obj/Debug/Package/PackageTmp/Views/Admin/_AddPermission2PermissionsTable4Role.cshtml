@@ -1,0 +1,68 @@
+﻿@model Studentscreeningsystem.Models.ROLE
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>*@
+<script src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        
+        $('#AddPermission').click(function () {
+            var _permissionId = $('#PermissionId').val();
+            var _roleId = $('#Role_Id').val();
+
+
+            if (_permissionId == '') {
+                return false;
+            }
+
+            var _parameters = { permissionId: _permissionId, id: _roleId };
+            $.ajax({
+                url: "/Admin/AddPermission2RoleReturnPartialView",
+                type: "GET",
+                data: _parameters,
+                success: function (data, textStatus, jqXHR) {
+                    $('#PermissionsTable').html(data);
+                    $('#PermissionId').val("");
+                }
+            });
+        });
+
+        $('#AddAllPermissions').click(function () {
+            var _roleId = $('#Role_Id').val();
+            var _parameters = { id: _roleId };
+
+            $.ajax({
+                url: "/Admin/AddAllPermissions2RoleReturnPartialView",
+                type: "GET",
+                data: _parameters,
+                success: function (data, textStatus, jqXHR) {
+                    //alert(_roleId);
+                    $('#PermissionsTable').html(data);
+                    $('#PermissionId').val("");
+                }
+            });
+        });
+    });
+</script>
+@Html.HiddenFor(model => model.Role_Id)
+
+<br />
+<div class="row justify-content-md-center">
+    @if (ViewContext.Controller.HasPermissionUser("Admin-AddAllPermissions2RoleReturnPartialView"))
+    {
+        <div class="input-group mb-3 col-md-5 ">
+            @Html.DropDownList("PermissionId", null, string.Empty, new { @class = "form-control", style = "width:350px;height: 42px; border-radius: 0; " })
+
+            <div class="input-group-prepend">
+
+                <button type="button" id="AddPermission" class="btn btn-outline-secondary"><i class="fa fa-plus"></i></button>
+            </div>
+
+        </div>
+    }
+    @if (ViewContext.Controller.HasPermissionUser("Admin-AddAllPermissions2RoleReturnPartialView"))
+    {
+        <div class="col-md-4">
+            <button type="button" id="AddAllPermissions" class="btn float-left "><i class="fa fa-undo"> </i>إضافة جميع الصلاحيات</button>
+        </div>
+    }
+</div>

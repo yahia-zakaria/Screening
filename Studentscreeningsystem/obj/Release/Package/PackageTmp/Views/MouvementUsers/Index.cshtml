@@ -1,0 +1,137 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.MouvementUsers>
+
+@{
+    ViewBag.Title = "سجل المستخدمين";
+}
+<script src="~/Scripts/jquery.min.js"></script>
+<script>
+    $(function () {
+        $("#pbSearch").click(function () {
+            $.get("/MouvementUsers/Search4Mouvements", { _StartDate: $("#StartDate").val(), _FinDate: $("#FinDate").val() }, function (data) {
+                $("#divMouvement").html(data);
+                alert(_StartDate + "   " + _FinDate);
+            })
+        })
+    });
+    $(function () {
+        $("#pbDelete").click(function () {
+            $.get("/MouvementUsers/DeleteMouvements", { _StartDate: $("#StartDate").val(), _FinDate: $("#FinDate").val() }, function (data) {
+                $("#StartDate").val();
+                $("#FinDate").val();
+                $("#divMouvement").html(data);
+                alert(_StartDate + "   " + _FinDate);
+            })
+        })
+    });
+    $(function () {
+        $("#pbReset").click(function () {
+            $("#StartDate").val();
+            $("#FinDate").val();
+            $.get("/MouvementUsers/filterReset", {}, function (data) {
+                $("#divMouvement").html(data);
+            })
+        })
+    });
+
+    $(function () {
+        $("#DeleteAll").click(function () {
+            $('#exampleModal').modal('show')
+            $('#deletep').click(function () {
+                $.get("/MouvementUsers/DeleteAllMouvements", {}, function (data) {
+                    $("#divMouvement").html(data);
+                    $('body').removeClass('modal-open')
+                    $('.modal-backdrop').remove()
+                    $('#exampleModal').modal('toggle')
+                })
+
+                
+            })
+        })
+    });
+
+    
+    $(document).ready(function () {
+        $(':input[type="button"]').button();
+
+    });
+</script>
+
+<style>
+    #pbSearch, #pbDelete {
+        background: #ffffff;
+        color: #00a15e;
+        border: solid 1px #00a15e;
+       
+    }
+ 
+
+        #pbSearch:hover, #pbDelete:hover {
+            background: #00a15e;
+            color: #ffffff;
+            border: solid 1px #00a15e;
+        }
+
+            #pbSearch:hover > i.icon, #pbDelete:hover > i.icon {
+                background: #00a15e;
+                color: #ffffff;
+            }
+    #pbReset {
+        margin-left: 2px;
+    }
+</style>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="modal fade pageModal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">تأكيد الحذف</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                هل أنت متأكد من حذف كل السجل ؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn " data-dismiss="modal" style="margin-left: 6px;"> إلغاء</button>
+                <button type="button" class="btn " id="deletep">حذف </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel-heading">قائمة سجل المستخدمين </div>
+<div class="row ">
+    <div class="col-md-12 ">
+
+        <div class="row ">
+            <div class="col-md-6">
+                <div class="input-group justify-content-md-center" style="direction: ltr;">
+
+                    <div class="input-group-prepend">
+                        <button type="button" id="pbDelete" name="pbdelete" class="btn btn-outline-secondary"><i class="icon fa fa-remove "></i></button>
+                        <button type="button" id="pbSearch" name="pbSearch" class="btn btn-outline-secondary"><i class="icon fa fa-search "></i></button>
+
+                    </div>
+
+
+
+                    <input type="date" id="FinDate" name="FinDate" placeholder="تاريخ نهاية البحث" class="form-control">
+                    <input type="date" id="StartDate" name="StartDate" placeholder="تاريخ بداية البحث" class="form-control">
+
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <button type="button" id="DeleteAll" class="btn float-left " onclick="Edit()"><i class="fa fa-undo"> </i> حذف كلي</button>
+                <button type="button" id="pbReset" class="btn float-left "><i class="fa fa-undo"> </i>تحديث البحث</button>
+            </div>
+            </div>
+
+        <br />
+        @Html.Partial("_ListMovementUsersTable", Model)
+
+    </div>
+</div>

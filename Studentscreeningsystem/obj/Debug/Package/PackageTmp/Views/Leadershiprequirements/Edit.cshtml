@@ -1,0 +1,51 @@
+﻿@model Studentscreeningsystem.Models.Leadershiprequirement
+
+@{
+    ViewBag.Title = "تعديل متطلب قيادي";
+}
+
+
+@Html.AntiForgeryToken()
+
+
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.IdLeadership)
+    <div class="panel-heading">تعديل متطلب قيادي </div>
+
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.LabelFor(model => model.NameLeadership, "المتطلب القيادي", htmlAttributes: new { @class = "text-info" })
+            @Html.EditorFor(model => model.NameLeadership, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NameLeadership, "", new { @class = "text-danger" })
+        </div>
+
+
+    </div>
+    <br />
+
+
+    <div class="col-md-12">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+
+                <button type="submit" class="btn "><i class="fa fa-edit"></i> تعديل</button>
+                @Html.ActionLink("إلغاء", "Index", null, new { @class = "btn btnlink  fa fa-close" })
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+}
+
+    <div>
+        @Html.ActionLink("قائمةالمتطلبات القيادية", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+

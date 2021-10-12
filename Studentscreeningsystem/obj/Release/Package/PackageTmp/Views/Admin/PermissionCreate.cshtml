@@ -1,0 +1,53 @@
+﻿@model Studentscreeningsystem.Models.PERMISSION
+@{
+    ViewBag.Title = "Create";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "إضافة صلاحية " })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='submit']").button();
+        $(":input[type='text']").text();
+    });
+</script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="panel-heading">إضافة صلاحية </div>
+<div class="panel">
+    <fieldset>
+
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PermissionDescription, "  الصلاحية", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(model => model.PermissionDescription, new { @class = "singlelinetextinput form-control", @placeholder = "Controller-Action" })
+                            @Html.ValidationMessageFor(model => model.PermissionDescription, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PermissionName, " مسمى الصلاحية", htmlAttributes: new { @class = "control-label col-md-4 text-info" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(model => model.PermissionName, new { @class = "singlelinetextinput form-control" })
+                            @Html.ValidationMessageFor(model => model.PermissionName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <br />
+                    <button type="submit" class="btn float-left "><i class="fa fa-save "></i>حفظ</button>
+                </div>
+            </div>
+
+        }
+    </fieldset>
+</div>
+<div>
+    @Html.ActionLink("عرض قائمة الصلاحيات", "PermissionIndex", "Admin")
+</div>

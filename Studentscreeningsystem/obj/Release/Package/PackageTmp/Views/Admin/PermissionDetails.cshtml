@@ -1,0 +1,58 @@
+﻿@model Studentscreeningsystem.Models.PERMISSION
+@{
+    ViewBag.Title = "Permission Details";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض تفاصيل الصلاحية  " })
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(":input[type='button']").button();
+    });
+</script>
+
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="panel-heading">تفاصيل الصلاحية  </div>
+<div class="panel">
+    <fieldset>
+        <div class="row">
+
+            <div class="col-md-10">
+                <strong>
+                    @Html.DisplayFor(model => model.PermissionName, new { style = "width:90%" })
+                </strong>
+                @Html.ValidationMessageFor(model => model.PermissionName)
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-10">
+
+                @Html.DisplayFor(model => model.PermissionDescription, new { style = "width:90%" })
+
+                @Html.ValidationMessageFor(model => model.PermissionDescription)
+            </div>
+        </div>
+        <div class="row"><div class="col-md-11"><button type="button" onclick="location.href='@Url.Action("PermissionEdit", "Admin", new { id = Model.Permission_Id })'" class="btn float-left "><i class="fa fa-save "></i>تعديل</button></div></div>
+
+
+
+        <br />
+    </fieldset>
+    <br />
+    <div>
+        <fieldset>
+            <legend>
+                المهام المرتبطة بهذه الصلاحية
+            </legend>
+
+            <div id="RolesTable">
+                @Html.Partial("_ListRolesTable4Permission", Model)
+            </div>
+        </fieldset>
+    </div>
+</div>
+<div>
+    </br>
+    @Html.ActionLink("عرض قائمة الصلاحيات", "PermissionIndex", "Admin")
+</div>

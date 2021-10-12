@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.Requirement>
+
+@{
+    ViewBag.Title = "قائمة متطلبات السلاح وتصنيفهم";
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض قائمة متطلبات السلاح وتصنيفهم" })
+<div class="panel-heading" style="font-family: Cairo;">قائمة متطلبات السلاح وتصنيفهم</div>
+
+
+
+
+<div class="row justify-content-md-center" style="font-family: Cairo;">
+    <div class="col-md-8 ">
+
+        @using (Html.BeginForm("ExportToExcel", "Requirements", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-12 ">
+                    <input type="submit" value="" class="buttonexcel float-md-left" />
+                    @Html.ActionLink(" ", "CreatePdf", "Requirements", new { }, new { @class = "buttonPDF float-md-left" })
+                </div>
+            </div>
+        }
+
+        @(Html
+            .Grid(Model)
+            .Build(columns =>
+            {
+                columns.Add(model => model.NameRequirement).Titled("المتطلب ").Sortable(true).Filterable(true);
+                columns.Add(model => model.Categorie).Titled("الصنف").Sortable(true).Filterable(true);
+                //عمليات البرنامج
+                if (ViewContext.Controller.HasPermissionUser("Requirements-Delete"))
+                {
+
+                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Delete", new { id = model.IdRequirement }, new { @class = "faicone fa fa-trash-o", title = "حذف متطلب" }));
+                }
+                if (ViewContext.Controller.HasPermissionUser("Requirements-Edit"))
+                {
+                    columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Edit", new { id = model.IdRequirement }, new { @class = "faicone fa fa-edit", title = "تعديل متطلب" }));
+                }
+
+
+
+
+            })
+            .Empty("لم يتم العثور على متطلبات")
+            .Css("css-classes") // Overwrites all classes with the new ones
+            .AppendCss("table-hover")
+            .Pageable(pager =>
+            {
+                pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 5, "5" }, { 10, "10" } };
+                pager.ShowPageSizes = true;
+                pager.PagesToDisplay = 3;
+                pager.CurrentPage = 1;
+                pager.RowsPerPage = 5;
+            })
+            )
+
+    </div>
+</div>

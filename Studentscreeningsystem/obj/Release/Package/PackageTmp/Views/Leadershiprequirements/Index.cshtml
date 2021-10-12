@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.Leadershiprequirement>
+
+@{
+    ViewBag.Title = "قائمة المتطلبات القيادية";
+}
+
+
+
+
+
+
+<div class="panel-heading">قائمة المتطلبات القيادية</div>
+
+
+
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-8 ">
+        @using (Html.BeginForm("ExportToExcel", "Leadershiprequirements", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-12 ">
+                    <input type="submit" value="" class="buttonexcel float-md-left" />
+                    @Html.ActionLink(" ", "CreatePdf", "Leadershiprequirements", new { }, new { @class = "buttonPDF float-md-left" })
+                </div>
+            </div>
+        }
+
+        @(Html
+                    .Grid(Model)
+                    .Build(columns =>
+                        {
+                            columns.Add(model => model.NameLeadership).Titled("المتطلب").Sortable(true).Filterable(true);
+
+
+                    //عمليات البرنامج
+                    if (ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Delete"))
+                            {
+                                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Delete", new { id = model.IdLeadership }, new { @class = "faicone fa fa-trash-o", title = "حذف متطلب قيادي" }));
+                            }
+                            if (ViewContext.Controller.HasPermissionUser("Leadershiprequirements-Edit"))
+                            {
+                                columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Edit", new { id = model.IdLeadership }, new { @class = "faicone fa fa-edit", title = "تعديل متطلب قيادي" }));
+                            }
+
+                        })
+                .Empty("لم يتم العثور على متطلبات")
+                    .Css("css-classes") // Overwrites all classes with the new ones
+                    .AppendCss("table-hover")
+                .Pageable(pager =>
+                {
+                    pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 5, "5" }, { 10, "10" } };
+                    pager.ShowPageSizes = true;
+                    pager.PagesToDisplay = 3;
+                    pager.CurrentPage = 1;
+                    pager.RowsPerPage = 5;
+                })
+        )
+
+
+
+    </div>
+</div>
+

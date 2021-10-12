@@ -1,0 +1,60 @@
+﻿@model Studentscreeningsystem.Models.ROLE
+@{
+    ViewBag.Title = "Role: " + Html.DisplayFor(model => model.RoleDescription);
+}
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض تفاصيل المهمة" })
+<script type="text/javascript">
+    $(function () {
+        $(":input[type='submit']").button();
+        $(":input[type='button']").button();
+    })
+</script>
+<link href="~/Content/custumbutton.css" rel="stylesheet" />
+
+<div class="panel-heading">تفاصيل المهمة  @Html.DisplayFor(model => model.RoleName) </div>
+
+<fieldset>
+
+    <div class="row">
+
+        <div class="col-md-10">
+            <strong>
+                @Html.DisplayFor(model => model.RoleName, new { style = "width:90%" })
+            </strong>
+            @Html.ValidationMessageFor(model => model.RoleName)
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.RoleDescription, new { style = "width:90%" })
+            @Html.ValidationMessageFor(model => model.RoleDescription)
+        </div>
+    </div>
+
+    <div class="row"><div class="col-md-11"><button type="button" onclick="location.href='@Url.Action("RoleEdit", "Admin", new { id = Model.Role_Id })'" class="btn float-left "><i class="fa fa-save "></i>تعديل</button></div></div>
+
+
+
+</fieldset>
+<br />
+
+<br />
+<div>
+    <fieldset>
+        <legend>
+
+            الصلاحيات المتاحه للمهمة
+
+        </legend>
+
+        <div id="PermissionsTable">
+            @Html.Partial("_ListPermissions", Model)
+        </div>
+    </fieldset>
+</div>
+
+<br />
+<div>
+    @Html.ActionLink("عرض قائمة المهام", "RoleIndex", "Admin")
+</div>

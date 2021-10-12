@@ -1,0 +1,21 @@
+﻿.mvc-grid th,
+.mvc-grid td {
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+}
+.mvc-grid table {
+    border: 1px solid #dee2e6;
+}
+
+.mvc-grid-pager .active,
+.mvc-grid-pager .active:focus,
+.mvc-grid-pager .active:hover {
+    background-color: #00a159;
+    border-color: #00a159;
+    color: #ffffff;
+}
+.mvc-grid-page-sizes select {
+    border: 1px solid #dddddd;
+    padding: 4.1px 21px;
+    font: inherit;
+}

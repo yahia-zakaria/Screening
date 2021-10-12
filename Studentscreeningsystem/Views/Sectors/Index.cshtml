@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Studentscreeningsystem.Models.Sector>
+@{
+    ViewBag.Title = "قائمة الأسلحة";
+}
+<script src="~/Scripts/jquery.min.js"></script>
+<script>
+    window.setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () { $(this).remove(); });
+        }, 4000
+    );</script>
+
+@Html.Action("Create", "MouvementUsers", new { userid = Session["User_Id"], link = "عرض قائمة الأسلحة" })
+
+<div class="panel-heading">قائمة الأسلحة</div>
+
+@if (TempData["SuccesAddSector"] != null)
+{
+    <div class="alert-messages text-center">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @TempData["SuccesAddSector"]
+
+        </div>
+    </div>
+}
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-8 ">
+        @using (Html.BeginForm("ExportToExcel", "Sectors", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-12 ">
+                    <input type="submit" value="" class="buttonexcel float-md-left" />
+                    @Html.ActionLink(" ", "CreatePdf", "Sectors", new { }, new { @class = "buttonPDF float-md-left" })
+                </div>
+            </div>
+        }
+        @(Html
+                                             .Grid(Model)
+                                             .Build(columns =>
+                                             {
+                                                 columns.Add(model => model.NameSector).Titled("اسم السلاح");
+
+                                         //عمليات البرنامج
+                                         if (ViewContext.Controller.HasPermissionUser("Sectors-Delete"))
+                                                 {
+                                                     columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "Delete", new { id = model.IdSector }, new { @class = "faicone fa fa-trash-o", title = "حذف سلاح" }));
+                                                 }
+                                                 if (ViewContext.Controller.HasPermissionUser("RequirementSectorVM-EditSector"))
+                                                 {
+                                                     columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "EditSector", "RequirementSectorVM", new { id = model.IdSector }, new { @class = "faicone fa fa-edit", title = "تعديل سلاح" }));
+                                                 }
+                                                 if (ViewContext.Controller.HasPermissionUser("RequirementSectorVM-RaportsSector"))
+                                                 {
+                                                     columns.Add().Encoded(false).RenderedAs(model => Html.ActionLink(" ", "RaportsSector", "RequirementSectorVM", new { id = model.IdSector }, new { @class = " faicone fa fa-plus", title = "تفاصيل سلاح" }));
+                                                 }
+                                             })
+                                             .Empty("لا يوجد أسلحة")
+                                             .Id("my-ajax-grid")
+                                             .Css("css-classes") // Overwrites all classes with the new ones
+                                             .AppendCss("table-hover")
+                                             .Pageable(pager =>
+                                             {
+                                                 pager.PageSizes = new Dictionary<Int32, String> { { 0, "الكل" }, { 5, "5" }, { 10, "10" } };
+                                                 pager.ShowPageSizes = true;
+                                                 pager.PagesToDisplay = 3;
+                                                 pager.CurrentPage = 1;
+                                                 pager.RowsPerPage = 5;
+                                             }).Filterable()
+        )
+    </div>
+</div>
